@@ -1,6 +1,6 @@
 # oeis2
 
-Parser of [Online Encyclopedia of Integer Sequences](https://oeis.org/).
+Parser of [Online Encyclopedia of Integer Sequences](https://oeis.org/), homage to [oeis](http://hackage.haskell.org/package/oeis).
 
 ## Usage
 
