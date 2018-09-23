@@ -1,0 +1,44 @@
+-- This file has been generated from package.yaml by hpack version 0.28.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: ec94abb7c9c01c0297af83bc8282e89bfd84eee7ad09afdc4168af58c6b04838
+
+name:           oeis2
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/23_prime/oeis2#readme>
+homepage:       https://github.com/23_prime/oeis2#readme
+bug-reports:    https://github.com/23_prime/oeis2/issues
+author:         okkey
+maintainer:     example@example.com
+copyright:      2018 okkey
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+extra-source-files:
+    ChangeLog.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/23_prime/oeis2
+
+library
+  exposed-modules:
+      Math.OEIS
+      Math.OEIS.Internal
+      Math.OEIS.Types
+  other-modules:
+      Paths_oeis2
+  hs-source-dirs:
+      src
+  build-depends:
+      HTTP
+    , aeson
+    , base >=4.7 && <5
+    , containers
+    , lens
+    , lens-aeson
+    , text
+  default-language: Haskell2010
