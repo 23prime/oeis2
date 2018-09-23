@@ -48,8 +48,9 @@ idSearchURI n = baseSearchURI ++ "id:" ++ n
 showSeqData :: SeqData -> String
 showSeqData = tail . init . show
 
---seqSearchURI :: SequenceData -> String
---seqSearchURI xs = baseSearchURI ++ intercalate "," (map show xs)
+readSeqData :: String -> SeqData
+readSeqData str = read ("[" ++ str ++ "]")
+
 seqSearchURI :: SeqData -> String
 seqSearchURI subSeq = baseSearchURI ++ showSeqData subSeq
 
