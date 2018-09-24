@@ -23,9 +23,9 @@ import           Math.OEIS.Types
 -- JSON Keys --
 ---------------
 intKeys   = ["number", "offset", "references", "revision"]
-textKeys  = ["id", "data", "name", "author", "time", "created"]
+textKeys  = ["id", "data", "name", "keyword", "author", "time", "created"]
 textsKeys = ["comment", "reference", "link", "formula", "example", "maple", "mathematica", "program", "xref", "ext"]
-keys = "keyword" : intKeys ++ textKeys ++ textsKeys :: Texts
+keys = intKeys ++ textKeys ++ textsKeys :: Texts
 
 
 ----------------
@@ -104,7 +104,7 @@ getData result k
                           len = T.length d'
                        in (k, Just $ TXT $ 'A' .+ T.replicate (6 - len) "0" +.+ d')
           _ -> (k, INT <$> d)
-  | k `elem` ("keyword" : textKeys)
+  | k `elem` textKeys
   = let d = result ^? key k ._String
     in case d of
       Nothing -> (k, Nothing)
@@ -115,7 +115,7 @@ getData result k
                        in (k, Just $ SEQ (read d' :: SeqData))
           "id" -> (k, TXTS . T.splitOn " " <$> d)
           _         -> (k, TXT <$> d)
-  | k `elem` ("program" : textsKeys)
+  | k `elem` textsKeys
   = let ds = result ^? key k ._Array
     in case ds of
          Nothing -> (k, Nothing)
