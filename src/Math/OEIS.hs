@@ -20,19 +20,27 @@ import           Math.OEIS.Internal
 import           Math.OEIS.Types
 
 
-{-
--- | Seach some sequences OEIS by sub-sequence
-searchSeq' :: SearchStatus -> String -> IO (Maybe [OEISSeq])
-searchSeq' ss str = do
-  result <- getResult ss str
-  let seq = case result of
-              Just result' -> parseOEIS result'
-              _            -> Nothing
+-- | Get all search results on OEIS
+--
+-- e.g.
+-- > ghci>searchSeq (ID "A002024")
+-- > Just (OEIS {number = "A002024", ids = "M0250 N0089", seqData = [1,2,2,...
+-- >
+-- > ghci>searchSeq (SubSeq [1,2,2,3,3,3,4,4,4,4])
+-- > [Just (OEIS {number = "A002024", ids = "M0250 N0089", seqData =...
+--
+-- > ghci>searchSeq (SubSeq [1,1,4,5,1,4,1,9,1,9,8,9,3])
+-- > []
+searchSeq' :: SearchStatus -> IO [Maybe OEISSeq]
+searchSeq' ss = do
+  results' <- getResults ss 0 $ Just []
+  let seq = case results' of
+              Just results -> parseOEIS <$> results
+              _            -> []
   return seq
 
-searchSeq :: SearchStatus -> String -> Maybe [OEISSeq]
-searchSeq ss = unsafePerformIO . searchSeq' ss
--}
+searchSeq :: SearchStatus -> [Maybe OEISSeq]
+searchSeq = unsafePerformIO . searchSeq'
 
 
 -- | Look up a sequence on OEIS.
@@ -49,7 +57,7 @@ lookupSeq = unsafePerformIO . lookupSeq'
 -- | lookupSeq in IO
 lookupSeq' :: SearchStatus -> IO (Maybe OEISSeq)
 lookupSeq' ss = do
-  result <- getResult ss
+  result <- getResult ss 0 0
   let seq = case result of
               Just result' -> parseOEIS result'
               _            -> Nothing

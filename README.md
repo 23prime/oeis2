@@ -8,11 +8,20 @@ Parser of [Online Encyclopedia of Integer Sequences](https://oeis.org/), homage 
 import Math.OEIS
 ```
 
+- Get all search results from sub-sequence
+
+    ```haskell
+    ghci>searchSeq (SubSeq [1,2,2,3,3,3,4,4,4,4])
+    [Just (OEIS {number = "A002024", ids = ["M0250", "N0089"], seqData...
+    ghci>length it
+    53
+    ```
+
 - Get first few terms from sub-sequence
 
     ```haskell
     ghci>getSeqData (SubSeq [1,2,2,3,3,3,4,4,4,4])
-    Just [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,6,6,6,6,6,6,7,7,7,7,7,7,7,8,8,8,8,8,8,8,8,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12,12,12,12,13,13,13,13,13,13]
+    Just [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,6,6,6,6,6,6,7,7,7,7,7,7,7,...
     ```
 
 -  Get Maple function from sub-sequence
