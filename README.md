@@ -18,13 +18,13 @@ import Math.OEIS
 -  Get Maple function from sub-sequence
 
     ```haskell
-    ghci> maple <$> lookupSeq (SubSeq [1,2,2,3,3,3,4,4,4,4])
+    ghci>maple <$> lookupSeq (SubSeq [1,2,2,3,3,3,4,4,4,4])
     Just ["A002024 := n-> ceil((sqrt(1+8*n)-1)/2); seq(A002024(n), n=1..100);"]
     ```
 
 - If no search result
 
     ```haskell
-    ghci> lookupSeq (ID "1145141919893")
+    ghci>lookupSeq (ID "1145141919893")
     Nothing
     ```
