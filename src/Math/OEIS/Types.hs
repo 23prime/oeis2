@@ -7,7 +7,7 @@ type Texts = [T.Text]
 
 data SearchStatus = ID String | SubSeq SeqData deriving (Show, Eq)
 
---data Language = Mathematica | Maple | Other deriving (Show, Eq)
+--data Language = Haskell | PARI | L T.Text deriving (Show, Eq)
 
 data Keyword = Base | Bref | Changed | Cofr | Cons | Core | Dead | Dumb | Dupe |
                Easy | Eigen | Fini | Frac | Full | Hard | More | Mult |
@@ -25,7 +25,7 @@ data OEISData = INT Integer
 
 data OEISSeq
   = OEIS { number      :: T.Text,
-           ids         :: T.Text,
+           ids         :: Texts,
            seqData     :: SeqData,
            name        :: T.Text,
            comment     :: Texts,
