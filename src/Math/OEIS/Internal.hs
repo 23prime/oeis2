@@ -73,28 +73,29 @@ getJSON (SubSeq subSeq) n = openURL $ seqSearchURI subSeq n
 -- Parse JSON --
 ----------------
 -- Get all search results --
-getResults :: SearchStatus -> Int -> Maybe [Value] -> IO (Maybe [Value])
-getResults ss n vs = do
-  jsn <- getJSON ss n
+getResults :: SearchStatus -> Int-> Int -> Maybe [Value] -> IO (Maybe [Value])
+getResults ss start bound vs = do
+  jsn <- getJSON ss start
   let results' = jsn ^? key "results" . _Array
       len = length $ fromJust results'
       results = case results' of
         Nothing -> return Nothing
         _       ->
           let vs' = Just $ (\i -> jsn ^?! key "results" . nth i) <$> [0..(len - 1)]
+              start' = start + 10
           in case ss of
                ID _ -> return vs'
                SubSeq _ ->
-                case len of
-                  10 -> getResults ss (n + 10) $ (++) <$> vs <*> vs'
-                  _  -> return $ (++) <$> vs <*> vs'
+                if bound /= 0 && start' >= bound || len /= 10
+                then return $ (++) <$> vs <*> vs'
+                else getResults ss start' bound $ (++) <$> vs <*> vs'
   results
 
 -- Get search result --
-getResult :: SearchStatus -> Int -> Int -> IO (Maybe Value)
-getResult ss n m = do
-  results <- getResults ss n $ Just []
-  let result = (!! m) <$> results
+getResult :: SearchStatus -> Int -> Int -> Int -> IO (Maybe Value)
+getResult ss start bound n = do
+  results <- getResults ss start bound $ Just []
+  let result = (!! n) <$> results
   return result
 
 -- Get each data in result --

@@ -31,16 +31,16 @@ import           Math.OEIS.Types
 --
 -- > ghci>searchSeq (SubSeq [1,1,4,5,1,4,1,9,1,9,8,9,3])
 -- > []
-searchSeq' :: SearchStatus -> IO [OEISSeq]
-searchSeq' ss = do
-  results' <- getResults ss 0 $ Just []
+searchSeq' :: SearchStatus -> Int -> IO [OEISSeq]
+searchSeq' ss bound = do
+  results' <- getResults ss 0 bound $ Just []
   let seq = case results' of
               Just results -> parseOEIS <$> results
               _            -> []
   return seq
 
-searchSeq :: SearchStatus -> [OEISSeq]
-searchSeq = unsafePerformIO . searchSeq'
+searchSeq :: SearchStatus -> Int -> [OEISSeq]
+searchSeq ss = unsafePerformIO . searchSeq' ss
 
 
 -- | Look up a sequence on OEIS.
@@ -57,7 +57,7 @@ lookupSeq = unsafePerformIO . lookupSeq'
 -- | lookupSeq in IO
 lookupSeq' :: SearchStatus -> IO (Maybe OEISSeq)
 lookupSeq' ss = do
-  result <- getResult ss 0 0
+  result <- getResult ss 0 1 0
   let seq = case result of
               Just result' -> Just $ parseOEIS result'
               _            -> Nothing
