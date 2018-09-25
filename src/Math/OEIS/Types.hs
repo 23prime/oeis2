@@ -12,7 +12,7 @@ data SearchStatus = ID String | SubSeq SeqData deriving (Show, Eq)
 data Keyword = Base | Bref | Changed | Cofr | Cons | Core | Dead | Dumb | Dupe |
                Easy | Eigen | Fini | Frac | Full | Hard | More | Mult |
                New | Nice | Nonn | Obsc | Sign | Tabf | Tabl | Uned |
-               Unkn | Walk | Word
+               Unkn | Walk | Word | Look
   deriving (Eq, Show, Read)
 
 data OEISData = INT Integer
