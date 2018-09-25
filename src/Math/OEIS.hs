@@ -31,7 +31,7 @@ import           Math.OEIS.Types
 --
 -- > ghci>searchSeq (SubSeq [1,1,4,5,1,4,1,9,1,9,8,9,3])
 -- > []
-searchSeq' :: SearchStatus -> IO [Maybe OEISSeq]
+searchSeq' :: SearchStatus -> IO [OEISSeq]
 searchSeq' ss = do
   results' <- getResults ss 0 $ Just []
   let seq = case results' of
@@ -39,7 +39,7 @@ searchSeq' ss = do
               _            -> []
   return seq
 
-searchSeq :: SearchStatus -> [Maybe OEISSeq]
+searchSeq :: SearchStatus -> [OEISSeq]
 searchSeq = unsafePerformIO . searchSeq'
 
 
@@ -59,7 +59,7 @@ lookupSeq' :: SearchStatus -> IO (Maybe OEISSeq)
 lookupSeq' ss = do
   result <- getResult ss 0 0
   let seq = case result of
-              Just result' -> parseOEIS result'
+              Just result' -> Just $ parseOEIS result'
               _            -> Nothing
   return seq
 

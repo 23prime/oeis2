@@ -22,9 +22,16 @@ import           Math.OEIS.Types
 ---------------
 -- JSON Keys --
 ---------------
-intKeys   = ["number", "offset", "references", "revision"]
-textKeys  = ["id", "data", "name", "keyword", "author", "time", "created"]
-textsKeys = ["comment", "reference", "link", "formula", "example", "maple", "mathematica", "program", "xref", "ext"]
+intKeys = [
+  "number", "offset", "references", "revision"
+  ]
+textKeys = [
+  "id", "data", "name", "keyword", "author", "time", "created"
+  ]
+textsKeys = [
+  "comment", "reference", "link", "formula", "example", "maple", "mathematica",
+  "program", "xref", "ext"
+  ]
 keys = intKeys ++ textKeys ++ textsKeys :: Texts
 
 
@@ -82,7 +89,6 @@ getResults ss n vs = do
                   10 -> getResults ss (n + 10) $ (++) <$> vs <*> vs'
                   _  -> return $ (++) <$> vs <*> vs'
   results
-
 
 -- Get search result --
 getResult :: SearchStatus -> Int -> Int -> IO (Maybe Value)
@@ -162,8 +168,8 @@ addElement seq ("keyword", Just (KEYS ks)) = seq {keyword = ks}
 --addElement seq ("program", Just (PRGS ps)) = seq {program = ps}
 addElement seq (_, _) = seq
 
-parseOEIS :: Value -> Maybe OEISSeq
-parseOEIS result = Just $ foldl' addElement emptyOEIS $ map (getData result) keys
+parseOEIS :: Value -> OEISSeq
+parseOEIS result = foldl' addElement emptyOEIS $ map (getData result) keys
 
 
 -- For Keyword --
