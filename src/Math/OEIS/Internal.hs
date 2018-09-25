@@ -94,7 +94,10 @@ getResults ss start bound vs = do
 -- Get a search result --
 getResult :: SearchStatus -> Int -> IO (Maybe Value)
 getResult ss n = do
-  results <- getResults ss 0 n $ Just []
+  let bound = case n of
+        0 -> 1
+        _ -> n
+  results <- getResults ss 0 bound $ Just []
   let result = (!! n) <$> results
   return result
 
