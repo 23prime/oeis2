@@ -57,7 +57,7 @@ lookupSeq = unsafePerformIO . lookupSeq'
 -- | lookupSeq in IO
 lookupSeq' :: SearchStatus -> IO (Maybe OEISSeq)
 lookupSeq' ss = do
-  result <- getResult ss 0 1 0
+  result <- getResult ss 1
   let seq = case result of
               Just result' -> Just $ parseOEIS result'
               _            -> Nothing
