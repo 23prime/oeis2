@@ -91,10 +91,10 @@ getResults ss start bound vs = do
                 else getResults ss start' bound $ (++) <$> vs <*> vs'
   results
 
--- Get search result --
-getResult :: SearchStatus -> Int -> Int -> Int -> IO (Maybe Value)
-getResult ss start bound n = do
-  results <- getResults ss start bound $ Just []
+-- Get a search result --
+getResult :: SearchStatus -> Int -> IO (Maybe Value)
+getResult ss n = do
+  results <- getResults ss 0 n $ Just []
   let result = (!! n) <$> results
   return result
 
