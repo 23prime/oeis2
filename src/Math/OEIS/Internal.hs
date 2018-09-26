@@ -128,12 +128,15 @@ getData result k
           "id" -> (k, TXTS . T.splitOn " " <$> d)
           _         -> (k, TXT <$> d)
   | k `elem` textsKeys
-  = let ds = result ^? key k ._Array
+  = let ds  = result ^? key k ._Array
     in case ds of
          Nothing -> (k, Nothing)
-         _ -> (k, Just $ TXTS $
-                  (\i -> result ^?! key k . nth i . _String) <$> [0..(length ds - 1)]
-              )
+         _       -> let ts = (\i -> result ^?! key k . nth i . _String) <$> [0..(len - 1)]
+                        len = fromJust $ length <$> ds
+                    in case k of
+                         "program" -> let prgs = parsePrograms emptyProgram [] ts
+                                      in (k, Just $ PRGS prgs)
+                         _ -> (k, Just $ TXTS ts)
   | otherwise = (k, Nothing)
 
 emptyOEIS :: OEISSeq
@@ -158,7 +161,6 @@ addElement seq (k, Just (TXTS ts))
       "example"     -> seq {example = ts}
       "maple"       -> seq {maple = ts}
       "mathematica" -> seq {mathematica = ts}
-      "program"     -> seq {program = ts}
       "xref"        -> seq {xref = ts}
       "ext"         -> seq {ext = ts}
       _             -> seq
@@ -171,7 +173,7 @@ addElement seq (k, Just (INT n))
 
 addElement seq ("data", Just (SEQ s)) = seq {seqData = s}
 addElement seq ("keyword", Just (KEYS ks)) = seq {keyword = ks}
---addElement seq ("program", Just (PRGS ps)) = seq {program = ps}
+addElement seq ("program", Just (PRGS ps)) = seq {program = ps}
 addElement seq (_, _) = seq
 
 parseOEIS :: Value -> OEISSeq
@@ -185,3 +187,20 @@ readKeyword = read . T.unpack . capitalize
 capitalize :: T.Text -> T.Text
 capitalize "" = ""
 capitalize cs = toUpper (T.head cs) .+ T.map toLower (T.tail cs)
+
+
+-- For Program --
+emptyProgram = ("", []) :: Program
+
+parsePrograms :: Program -> [Program] -> [T.Text] -> [Program]
+parsePrograms _ prgs [] = prgs
+parsePrograms (lang0, funcs) prgs (t : ts)
+  | T.head t == '(' = let prgs' = prgs ++ [(lang, [func])]
+                      in  parsePrograms (lang, [func]) prgs' ts
+  | otherwise       = let prgs' = init prgs ++ [(lang0, funcs ++ [t])]
+                      in  parsePrograms (lang0, funcs ++ [t]) prgs' ts
+  where
+    (lang', func') = T.breakOn ")" t
+    lang = T.tail lang'
+    func = T.strip $ T.tail func'
+
