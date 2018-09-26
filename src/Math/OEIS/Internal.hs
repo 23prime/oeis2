@@ -1,11 +1,9 @@
--- | This module exists just to facilitate testing.
--- /Nothing here is part of the OEIS API./
-
 {-# LANGUAGE OverloadedStrings #-}
 
 module Math.OEIS.Internal where
 
 import           Control.Lens     ((^?), (^?!))
+import           Control.Monad    (when)
 import           Data.Aeson.Lens
 import           Data.Aeson.Types
 import           Data.Char
@@ -75,19 +73,23 @@ getJSON (SubSeq subSeq) n = openURL $ seqSearchURI subSeq n
 -- Get all search results --
 getResults :: SearchStatus -> Int-> Int -> Maybe [Value] -> IO (Maybe [Value])
 getResults ss start bound vs = do
+  when (bound < 0) $ fail "Upper-bound number of search results mast be non-negative."
   jsn <- getJSON ss start
   let results' = jsn ^? key "results" . _Array
       len = length $ fromJust results'
       results = case results' of
         Nothing -> return Nothing
         _       ->
-          let vs' = Just $ (\i -> jsn ^?! key "results" . nth i) <$> [0..(len - 1)]
+          let vs'    = Just $ (\i -> jsn ^?! key "results" . nth i) <$> [0..(len - 1)]
               start' = start + 10
+              diff   = case bound of
+                         0 -> len
+                         _ -> bound - start
           in case ss of
                ID _ -> return vs'
                SubSeq _ ->
-                if bound /= 0 && start' >= bound || len /= 10
-                then return $ (++) <$> vs <*> vs'
+                if bound /= 0 && diff <= 10 || len /= 10
+                then return $ (++) <$> vs <*> (take diff <$> vs')
                 else getResults ss start' bound $ (++) <$> vs <*> vs'
   results
 
@@ -95,8 +97,8 @@ getResults ss start bound vs = do
 getResult :: SearchStatus -> Int -> IO (Maybe Value)
 getResult ss n = do
   let bound = case n of
-        0 -> 1
-        _ -> n
+                0 -> 1
+                _ -> n + 1
   results <- getResults ss 0 bound $ Just []
   let result = (!! n) <$> results
   return result
