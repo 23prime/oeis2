@@ -10,7 +10,7 @@ extra-source-files:
 - README.md
 - ChangeLog.md
 
-synopsis:            Parser of Online Encyclopedia of Integer Sequences(OEIS).
+synopsis:            Interface for Online Encyclopedia of Integer Sequences (OEIS).
 category:            Math
 
 description:         Please see the README on GitHub at <https://github.com/23_prime/oeis2#readme>
