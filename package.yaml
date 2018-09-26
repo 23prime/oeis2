@@ -3,20 +3,16 @@ version:             0.1.0.0
 github:              "23_prime/oeis2"
 license:             BSD3
 author:              "okkey"
-maintainer:          "example@example.com"
+maintainer:          "a23b23c23d23e@gmail.com"
 copyright:           "2018 okkey"
 
 extra-source-files:
 - README.md
 - ChangeLog.md
 
-# Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            Web
+synopsis:            Parser of Online Encyclopedia of Integer Sequences(OEIS).
+category:            Math
 
-# To avoid duplicated efforts in documentation and dealing with the
-# complications of embedding Haddock markup inside cabal files, it is
-# common to point users to the README.md file.
 description:         Please see the README on GitHub at <https://github.com/23_prime/oeis2#readme>
 
 dependencies:
