@@ -2,11 +2,11 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a39aac4a500a153ae220be1cf66044caaaa6b8d10576e1d85f815b09642a12af
+-- hash: db89e2a040c8281f8fc5c840598536e43340e72ac3e971f268ebb310a784a6c6
 
 name:           oeis2
 version:        0.1.0.0
-synopsis:       Parser of Online Encyclopedia of Integer Sequences(OEIS).
+synopsis:       Interface for Online Encyclopedia of Integer Sequences (OEIS).
 description:    Please see the README on GitHub at <https://github.com/23_prime/oeis2#readme>
 category:       Math
 homepage:       https://github.com/23_prime/oeis2#readme
