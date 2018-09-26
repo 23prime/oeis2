@@ -10,23 +10,22 @@ import Math.OEIS
 
 - Get all search results from sub-sequence
 
-    ```haskell
-    ghci>searchSeq (SubSeq [1,2,2,3,3,3,4,4,4,4]) 0
-    [Just (OEIS {number = "A002024", ids = ["M0250", "N0089"], seqData...
-    ghci>length it
-    53
-    ghci>searchSeq (SubSeq [1,2,2,3,3,3,4,4,4,4]) 10
-    [Just (OEIS {number = "A002024", ids = ["M0250", "N0089"], seqData...
-    ghci>length it
-    10
-    ```
+    - If `n == 0`, you get all search results.
 
-    - Note:  
-
-        If `n == 0`, you get all search results.  
-        Otherwise;
         ```haskell
-        length (searchSeq _ n) == div n 10 * 10
+        ghci>searchSeq (SubSeq [1,2,3,4]) 0
+        [OEIS {number = "A000027", ids = ["M0472","N0173"], seqData = [1,2,3,4,5,6,7,...
+        ghci>length it
+        53
+        ```
+
+    - Otherwise, you get first `n` search results.
+
+        ```haskell
+        ghci>searchSeq (SubSeq [1,2,3,4]) 17
+        [OEIS {number = "A000027", ids = ["M0472","N0173"], seqData = [1,2,3,4,5,6,7,8,9,
+        ghci>length it
+        17
         ```
 
 - Get first few terms from sub-sequence

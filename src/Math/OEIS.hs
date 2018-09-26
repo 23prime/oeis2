@@ -23,13 +23,19 @@ import           Math.OEIS.Types
 -- | Get all search results on OEIS
 --
 -- e.g.
--- > ghci>searchSeq (ID "A002024")
--- > Just (OEIS {number = "A002024", ids = "M0250 N0089", seqData = [1,2,2,...
--- >
--- > ghci>searchSeq (SubSeq [1,2,2,3,3,3,4,4,4,4])
--- > [Just (OEIS {number = "A002024", ids = "M0250 N0089", seqData =...
+-- > ghci>searchSeq (ID "A000027") 0
+-- > [OEIS {number = "A000027", ids = ["M0472","N0173"], seqData = [1,2,3,4,5,6,7,...
 --
--- > ghci>searchSeq (SubSeq [1,1,4,5,1,4,1,9,1,9,8,9,3])
+-- > ghci>searchSeq (SubSeq [1,2,3,4]) 0
+-- > [OEIS {number = "A000027", ids = ["M0472","N0173"], seqData = [1,2,3,4,5,6,7,...
+-- > ghci>length it
+-- > 53
+-- > ghci>searchSeq (SubSeq [1,2,3,4]) 17
+-- > [OEIS {number = "A000027", ids = ["M0472","N0173"], seqData = [1,2,3,4,5,6,7,8,9,
+-- > ghci>length it
+-- > 17
+--
+-- > ghci>searchSeq (SubSeq [1,1,4,5,1,4,1,9,1,9,8,9,3]) 0
 -- > []
 searchSeq' :: SearchStatus -> Int -> IO [OEISSeq]
 searchSeq' ss bound = do
@@ -46,18 +52,18 @@ searchSeq ss = unsafePerformIO . searchSeq' ss
 -- | Look up a sequence on OEIS.
 --
 -- e.g.
--- > ghci>lookupSeq (ID "A002024")
--- > Just (OEIS {number = "A002024", ids = "M0250 N0089", seqData = [1,2,2,...
+-- > ghci>lookupSeq (ID "A000027")
+-- > Just (OEIS {number = "A000027", ids = ["M0472","N0173"], seqData = [1,2,3,4,5,6,7,...
 --
--- > ghci>lookupSeq (SubSeq [1,2,2,3,3,3,4,4,4,4])
--- > Just (OEIS {number = "A002024", ids = "M0250 N0089", seqData = [1,2,2,...
+-- > ghci>lookupSeq (SubSeq [1,2,3,4])
+-- > Just (OEIS {number = "A000027", ids = ["M0472","N0173"], seqData = [1,2,3,4,5,6,7,...
 lookupSeq :: SearchStatus -> Maybe OEISSeq
 lookupSeq = unsafePerformIO . lookupSeq'
 
 -- | lookupSeq in IO
 lookupSeq' :: SearchStatus -> IO (Maybe OEISSeq)
 lookupSeq' ss = do
-  result <- getResult ss 1
+  result <- getResult ss 0
   let seq = case result of
               Just result' -> Just $ parseOEIS result'
               _            -> Nothing
@@ -67,11 +73,12 @@ lookupSeq' ss = do
 -- | Get sub-sequence on OEIS.
 --
 -- e.g.
--- > ghci>getSeqData (ID "A002024")
--- > Just [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,6,6,6,6,6,6,7,7,7,7,7,7,7,8,8,8,8,8,8,8,8,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12,12,12,12,13,13,13,13,13,13]
+-- > ghci>getSeqData (ID "A000027")
+-- > Just [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77]
 --
--- > ghci>getSeqData (SubSeq [1,2,2,3,3,3,4,4,4,4])
--- > Just [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,6,6,6,6,6,6,7,7,7,7,7,7,7,8,8,8,8,8,8,8,8,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12,12,12,12,13,13,13,13,13,13]
+-- > ghci>getSeqData (SubSeq [1,2,3,4])
+-- > Just [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77]
+--
 getSeqData :: SearchStatus -> Maybe SeqData
 getSeqData = unsafePerformIO . getSeqData'
 
@@ -83,8 +90,8 @@ getSeqData' = (<$>) (seqData <$>) . lookupSeq'
 -- | Extend from sub-sequence.
 --
 -- e.g.
--- >extendSeq [1,2,2,3,3,3,4,4,4,4]
--- [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,6,6,6,6,6,6,7,7,7,7,7,7,7,8,8,8,8,8,8,8,8,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12,12,12,12,13,13,13,13,13,13]
+-- > ghci>extendSeq [1,2,3,4]
+-- > [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77]
 extendSeq :: SeqData -> SeqData
 extendSeq = unsafePerformIO . extendSeq'
 
