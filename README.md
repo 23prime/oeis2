@@ -2,6 +2,13 @@
 
 Parser of [Online Encyclopedia of Integer Sequences](https://oeis.org/), homage to [oeis](http://hackage.haskell.org/package/oeis).
 
+## Difference from  [oeis](http://hackage.haskell.org/package/oeis)
+
+- Source data of OEIS.  
+  : [oeis](http://hackage.haskell.org/package/oeis) use `fmt=text`, but this library use `fmt=json`.
+- Possible to get all search results.
+- Search functions from ID or sub-sequence are merged.
+
 ## Usage
 
 ```haskell
