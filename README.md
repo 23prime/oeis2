@@ -1,6 +1,6 @@
 # oeis2
 
-Interface for [Online Encyclopedia of Integer Sequences](https://oeis.org/); homage to [oeis](http://hackage.haskell.org/package/oeis).
+Haskell interface for [Online Encyclopedia of Integer Sequences](https://oeis.org/); homage to [oeis](http://hackage.haskell.org/package/oeis).
 
 ## Difference from  [oeis](http://hackage.haskell.org/package/oeis)
 
