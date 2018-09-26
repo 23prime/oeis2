@@ -8,6 +8,8 @@ type Texts = [T.Text]
 data SearchStatus = ID String | SubSeq SeqData deriving (Show, Eq)
 
 --data Language = Haskell | PARI | L T.Text deriving (Show, Eq)
+type Language = T.Text
+type Program = (Language, [T.Text])
 
 data Keyword = Base | Bref | Changed | Cofr | Cons | Core | Dead | Dumb | Dupe |
                Easy | Eigen | Fini | Frac | Full | Hard | More | Mult |
@@ -20,7 +22,7 @@ data OEISData = INT Integer
               | TXT T.Text
               | TXTS Texts
               | KEYS [Keyword]
---              | PRGS [(Language, T.Text)]
+              | PRGS [Program]
   deriving (Show)
 
 data OEISSeq
@@ -35,8 +37,7 @@ data OEISSeq
            example     :: Texts,
            maple       :: Texts,
            mathematica :: Texts,
---           program     :: [(Language, T.Text)],
-           program     :: Texts,
+           program     :: [Program],
            xref        :: Texts,
            keyword     :: [Keyword],
            offset      :: Integer,
