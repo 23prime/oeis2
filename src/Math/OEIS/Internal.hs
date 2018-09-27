@@ -86,11 +86,12 @@ getResults ss start bound vs = do
                          0 -> len
                          _ -> bound - start
           in case ss of
-               ID _ -> return vs'
+               ID _     -> return vs'
                SubSeq _ ->
-                if bound /= 0 && diff <= 10 || len /= 10
-                then return $ (++) <$> vs <*> (take diff <$> vs')
-                else getResults ss start' bound $ (++) <$> vs <*> vs'
+                if bound /= 0 && diff <= 10 || len /= 10 then
+                  return $ (++) <$> vs <*> (take diff <$> vs')
+                else
+                  getResults ss start' bound $ (++) <$> vs <*> vs'
   results
 
 -- Get a search result --
@@ -115,7 +116,7 @@ getData result k
           "number" -> let d'  = T.pack $ show $ fromJust d
                           len = T.length d'
                        in (k, Just $ TXT $ 'A' .+ T.replicate (6 - len) "0" +.+ d')
-          _ -> (k, INT <$> d)
+          _        -> (k, INT <$> d)
   | k `elem` textKeys
   = let d = result ^? key k ._String
     in case d of
@@ -125,18 +126,18 @@ getData result k
           "keyword" -> (k, KEYS . map readKeyword . T.splitOn "," <$> d)
           "data"    -> let d' = T.unpack $ '[' .+ fromJust d +. ']'
                        in (k, Just $ SEQ (read d' :: SeqData))
-          "id" -> (k, TXTS . T.splitOn " " <$> d)
+          "id"      -> (k, TXTS . T.splitOn " " <$> d)
           _         -> (k, TXT <$> d)
   | k `elem` textsKeys
   = let ds  = result ^? key k ._Array
     in case ds of
          Nothing -> (k, Nothing)
-         _       -> let ts = (\i -> result ^?! key k . nth i . _String) <$> [0..(len - 1)]
+         _       -> let ts  = (\i -> result ^?! key k . nth i . _String) <$> [0..(len - 1)]
                         len = fromJust $ length <$> ds
                     in case k of
                          "program" -> let prgs = parsePrograms emptyProgram [] ts
                                       in (k, Just $ PRGS prgs)
-                         _ -> (k, Just $ TXTS ts)
+                         _         -> (k, Just $ TXTS ts)
   | otherwise = (k, Nothing)
 
 emptyOEIS :: OEISSeq
@@ -170,8 +171,7 @@ addElement seq (k, Just (INT n))
       "references" -> seq {references = n}
       "revision"   -> seq {revision = n}
       _            -> seq
-
-addElement seq ("data", Just (SEQ s)) = seq {seqData = s}
+addElement seq ("data", Just (SEQ s))      = seq {seqData = s}
 addElement seq ("keyword", Just (KEYS ks)) = seq {keyword = ks}
 addElement seq ("program", Just (PRGS ps)) = seq {program = ps}
 addElement seq (_, _) = seq
@@ -201,6 +201,6 @@ parsePrograms (lang0, funcs) prgs (t : ts)
                       in  parsePrograms (lang0, funcs ++ [t]) prgs' ts
   where
     (lang', func') = T.breakOn ")" t
-    lang = T.tail lang'
-    func = T.strip $ T.tail func'
+    lang           = T.tail lang'
+    func           = T.strip $ T.tail func'
 
