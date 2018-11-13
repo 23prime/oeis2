@@ -23,6 +23,19 @@ dependencies:
 - lens
 - lens-aeson
 - text
+- hspec
 
 library:
   source-dirs: src
+
+tests:
+  oeis2-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - oeis2
+    - hspec
