@@ -48,4 +48,4 @@ data OEISSeq
            time        :: T.Text,
            created     :: T.Text
          }
-  deriving (Show)
+  deriving (Show, Eq, Read)
