@@ -11,6 +11,16 @@ Haskell interface for [Online Encyclopedia of Integer Sequences](https://oeis.or
 
 ## Usage
 
+If using Stack, add the following to `stack.yaml`.
+
+```yaml
+extra-deps:
+- github: 23prime/oeis2
+  commit: HEAD
+```
+
+And, add import statement.
+
 ```haskell
 import Math.OEIS
 ```
