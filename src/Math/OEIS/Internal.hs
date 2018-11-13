@@ -94,7 +94,7 @@ getResults ss start bound vs = do
                   getResults ss start' bound $ (++) <$> vs <*> vs'
   results
 
--- Get a search result --
+-- Get nth search result --
 getResult :: SearchStatus -> Int -> IO (Maybe Value)
 getResult ss n = do
   let bound = case n of
@@ -115,7 +115,7 @@ getData result k
         case k of
           "number" -> let d'  = T.pack $ show $ fromJust d
                           len = T.length d'
-                       in (k, Just $ TXT $ 'A' .+ T.replicate (6 - len) "0" +.+ d')
+                      in (k, Just $ TXT $ 'A' .+ T.replicate (6 - len) "0" +.+ d')
           _        -> (k, INT <$> d)
   | k `elem` textKeys
   = let d = result ^? key k ._String
@@ -171,7 +171,7 @@ addElement seq (k, Just (INT n))
       "references" -> seq {references = n}
       "revision"   -> seq {revision = n}
       _            -> seq
-addElement seq ("data", Just (SEQ s))      = seq {seqData = s}
+addElement seq ("data"   , Just (SEQ s))   = seq {seqData = s}
 addElement seq ("keyword", Just (KEYS ks)) = seq {keyword = ks}
 addElement seq ("program", Just (PRGS ps)) = seq {program = ps}
 addElement seq (_, _) = seq
@@ -180,7 +180,7 @@ parseOEIS :: Value -> OEISSeq
 parseOEIS result = foldl' addElement emptyOEIS $ map (getData result) keys
 
 
--- For Keyword --
+-- Parse Keyword --
 readKeyword :: T.Text -> Keyword
 readKeyword = read . T.unpack . capitalize
 
@@ -189,18 +189,17 @@ capitalize "" = ""
 capitalize cs = toUpper (T.head cs) .+ T.map toLower (T.tail cs)
 
 
--- For Program --
+-- Parse Program --
 emptyProgram = ("", []) :: Program
 
 parsePrograms :: Program -> [Program] -> [T.Text] -> [Program]
 parsePrograms _ prgs [] = prgs
 parsePrograms (lang0, funcs) prgs (t : ts)
   | T.head t == '(' = let prgs' = prgs ++ [(lang, [func])]
-                      in  parsePrograms (lang, [func]) prgs' ts
+                      in parsePrograms (lang, [func]) prgs' ts
   | otherwise       = let prgs' = init prgs ++ [(lang0, funcs ++ [t])]
-                      in  parsePrograms (lang0, funcs ++ [t]) prgs' ts
+                      in parsePrograms (lang0, funcs ++ [t]) prgs' ts
   where
     (lang', func') = T.breakOn ")" t
     lang           = T.tail lang'
     func           = T.strip $ T.tail func'
-
