@@ -7,6 +7,7 @@ module Math.OEIS (
   OEISSeq(..),
 
   -- * Functions
+  searchSeq',  searchSeq,
   lookupSeq',  lookupSeq,
   getSeqData', getSeqData,
   extendSeq',  extendSeq
