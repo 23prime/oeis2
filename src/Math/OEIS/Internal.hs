@@ -12,7 +12,6 @@ import           Data.Maybe       (fromJust, fromMaybe, isNothing)
 import qualified Data.Text        as T
 import qualified Data.Text.IO     as T
 import           Network.HTTP     (getRequest, getResponseBody, simpleHTTP)
-import           System.IO.Unsafe (unsafePerformIO)
 
 import           Math.OEIS.Types
 
