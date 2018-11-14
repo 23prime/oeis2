@@ -54,7 +54,9 @@ showSeqData :: SeqData -> String
 showSeqData = tail . init . show
 
 readSeqData :: String -> SeqData
-readSeqData str = read ("[" ++ str ++ "]")
+readSeqData str = case reads ("[" ++ str ++ "]") of
+                    [(sd, "")] -> sd
+                    _          -> []
 
 seqSearchURI :: SeqData -> Int -> String
 seqSearchURI subSeq n = baseSearchURI n ++ showSeqData subSeq
@@ -182,7 +184,11 @@ parseOEIS result = foldl' addElement emptyOEIS $ map (getData result) keys
 
 -- Parse Keyword --
 readKeyword :: T.Text -> Keyword
-readKeyword = read . T.unpack . capitalize
+readKeyword txt =
+  let str = T.unpack $ capitalize txt
+  in case reads str of
+       [(kw, "")] -> kw
+       _          -> Other
 
 capitalize :: T.Text -> T.Text
 capitalize "" = ""
