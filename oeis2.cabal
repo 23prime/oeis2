@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 36f8dafda771a4dc3d93f9491b7f5d75bc8a0cf5ab60327e9b6d1969e5e53f32
+-- hash: 779d871207e5a7713ae947c83e1be8a09ef8be53b78af90088062af45095b33f
 
 name:           oeis2
 version:        0.1.0.0
@@ -37,6 +37,7 @@ library
       src
   build-depends:
       HTTP
+    , QuickCheck
     , aeson
     , base >=4.7 && <5
     , containers
@@ -56,6 +57,7 @@ test-suite oeis2-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       HTTP
+    , QuickCheck
     , aeson
     , base >=4.7 && <5
     , containers

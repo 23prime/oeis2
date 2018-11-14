@@ -24,6 +24,7 @@ dependencies:
 - lens-aeson
 - text
 - hspec
+- QuickCheck
 
 library:
   source-dirs: src
