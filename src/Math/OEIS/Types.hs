@@ -14,7 +14,7 @@ type Program = (Language, [T.Text])
 data Keyword = Base | Bref | Changed | Cofr | Cons | Core | Dead | Dumb | Dupe |
                Easy | Eigen | Fini | Frac | Full | Hard | More | Mult |
                New | Nice | Nonn | Obsc | Sign | Tabf | Tabl | Uned |
-               Unkn | Walk | Word | Look
+               Unkn | Walk | Word | Look | Other
   deriving (Eq, Show, Read)
 
 data OEISData = INT Integer
