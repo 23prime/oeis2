@@ -1,36 +1,38 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+import           Data.Aeson.Lens
+import           Data.Aeson.Types
+import qualified Data.ByteString.Char8 as B8
 import           Data.List
-import           Data.Maybe
 import qualified Data.Text             as T
-import           Math.OEIS
+import qualified Data.Text.IO          as T
 import           System.IO
 import           System.IO.Unsafe      (unsafePerformIO)
---import           System.Random
 import           Test.Hspec
 import           Test.Hspec.QuickCheck
 import           Test.QuickCheck.Gen
 
+import           Math.OEIS
+
 
 main :: IO ()
 main = do
-  withFile "./test/docs/test1.txt" ReadMode $ \handle1 ->
-    withFile "./test/docs/test2.txt" ReadMode $ \handle2 -> do
-      test1 <- hGetContents handle1
-      test2 <- hGetContents handle2
-      let testOEISSeq1 = read test1 :: [OEISSeq]
-          testOEISSeq2 = read test2 :: [OEISSeq]
-      hspec $ specSearchSeq testOEISSeq1 testOEISSeq2
+  withFile "./test/docs/test.json" ReadMode $ \handle1 ->
+    withFile "./test/docs/result.txt" ReadMode $ \handle2 -> do
+      testJSON    <- T.hGetContents handle1
+      testResult' <- hGetContents handle2
+      let testResult = read testResult' :: [OEISSeq]
+      hspec $ specSearchSeq testJSON testResult
   hspec specLookupSeq
   hspec specGetSeqData
   hspec specExtendSeq
 
-specSearchSeq :: [OEISSeq] -> [OEISSeq] -> Spec
-specSearchSeq s1 s2 = describe "Test for searchSeq" $ do
-  it "Get all search results" $
-    searchSeq (SubSeq [1, 2, 3, 6, 11, 23, 47, 106]) 0 `shouldBe` s1
+specSearchSeq :: T.Text -> [OEISSeq] -> Spec
+specSearchSeq jsn seq = describe "Test for searchSeq" $ do
+  it "Number of all search results" $
+    length (searchSeq (SubSeq [1, 2, 3, 6, 11, 23, 47, 106]) 0) `shouldBe` 2
   it "Get some of search results" $
-    searchSeq (SubSeq [1, 2, 3, 4, 5, 6, 7]) 3 `shouldBe` s2
+    searchSeq (JSN jsn) 10 `shouldBe` seq
   it "No search results" $
     searchSeq (SubSeq [1, 2, 3, 6, 11, 23, 47, 106, 237]) 0 `shouldBe` []
 
