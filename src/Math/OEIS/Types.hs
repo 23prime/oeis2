@@ -5,7 +5,10 @@ import qualified Data.Text as T
 type SeqData = [Integer]
 type Texts = [T.Text]
 
-data SearchStatus = ID String | SubSeq SeqData deriving (Show, Eq)
+data SearchStatus = ID String
+                  | SubSeq SeqData
+                  | JSN T.Text -- for test
+  deriving (Show, Eq)
 
 --data Language = Haskell | PARI | L T.Text deriving (Show, Eq)
 type Language = T.Text

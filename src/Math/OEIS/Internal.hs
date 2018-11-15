@@ -67,6 +67,7 @@ openURL x = T.decodeUtf8 . getResponseBody <$> (httpBS =<< parseRequest x)
 getJSON :: SearchStatus -> Int -> IO T.Text
 getJSON (ID str) _        = openURL $ idSearchURI str
 getJSON (SubSeq subSeq) n = openURL $ seqSearchURI subSeq n
+getJSON (JSN txt) _       = return txt -- for test
 
 
 ----------------
@@ -89,6 +90,7 @@ getResults ss start bound vs = do
                          _ -> bound - start
           in case ss of
                ID _     -> return vs'
+               JSN _    -> return vs'
                SubSeq _ ->
                 if bound /= 0 && diff <= 10 || len /= 10 then
                   return $ (++) <$> vs <*> (take diff <$> vs')
