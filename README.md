@@ -8,6 +8,7 @@ Haskell interface for [Online Encyclopedia of Integer Sequences](https://oeis.or
   : [oeis](http://hackage.haskell.org/package/oeis) use `fmt=text`, but this library use `fmt=json`.
 - Possible to get all search results.
 - Search functions from ID or sub-sequence are merged.
+- Support for HTTPS.
 
 ## Usage
 
