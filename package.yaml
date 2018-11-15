@@ -17,12 +17,12 @@ description:         Please see the README on GitHub at <https://github.com/23_p
 
 dependencies:
 - base >= 4.7 && < 5
-- HTTP
+- text
+- http-conduit
 - aeson
 - containers
 - lens
 - lens-aeson
-- text
 - hspec
 - QuickCheck
 

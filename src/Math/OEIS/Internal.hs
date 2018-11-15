@@ -2,16 +2,17 @@
 
 module Math.OEIS.Internal where
 
-import           Control.Lens     ((^?), (^?!))
-import           Control.Monad    (when)
+import           Control.Lens        ((^?), (^?!))
+import           Control.Monad       (when)
 import           Data.Aeson.Lens
 import           Data.Aeson.Types
 import           Data.Char
 import           Data.List
-import           Data.Maybe       (fromJust, fromMaybe, isNothing)
-import qualified Data.Text        as T
-import qualified Data.Text.IO     as T
-import           Network.HTTP     (getRequest, getResponseBody, simpleHTTP)
+import           Data.Maybe          (fromJust, fromMaybe, isNothing)
+import qualified Data.Text           as T
+import qualified Data.Text.Encoding  as T
+import qualified Data.Text.IO        as T
+import           Network.HTTP.Simple (getResponseBody, httpBS, parseRequest)
 
 import           Math.OEIS.Types
 
@@ -44,7 +45,10 @@ keys = intKeys ++ textKeys ++ textsKeys :: Texts
 -- Get JSON of OEIS --
 ----------------------
 baseSearchURI :: Int -> String
-baseSearchURI n = "http://oeis.org/search?fmt=json&start=" ++ show n ++"&q="
+baseSearchURI n = "https://oeis.org/search?fmt=json&start=" ++ show n ++"&q="
+
+seqSearchURI :: SeqData -> Int -> String
+seqSearchURI subSeq n = baseSearchURI n ++ showSeqData subSeq
 
 idSearchURI :: String -> String
 idSearchURI n = baseSearchURI 0 ++ "id:" ++ n
@@ -57,11 +61,8 @@ readSeqData str = case reads ("[" ++ str ++ "]") of
                     [(sd, "")] -> sd
                     _          -> []
 
-seqSearchURI :: SeqData -> Int -> String
-seqSearchURI subSeq n = baseSearchURI n ++ showSeqData subSeq
-
 openURL :: String -> IO T.Text
-openURL x = fmap T.pack $ getResponseBody =<< simpleHTTP (getRequest x)
+openURL x = T.decodeUtf8 . getResponseBody <$> (httpBS =<< parseRequest x)
 
 getJSON :: SearchStatus -> Int -> IO T.Text
 getJSON (ID str) _        = openURL $ idSearchURI str
