@@ -2,7 +2,6 @@
 
 import           Data.Aeson.Lens
 import           Data.Aeson.Types
-import qualified Data.ByteString.Char8 as B8
 import           Data.List
 import qualified Data.Text             as T
 import qualified Data.Text.IO          as T
