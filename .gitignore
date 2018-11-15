@@ -1,3 +1,4 @@
 .stack-work/
 oeis.cabal
+haddock/
 *~
