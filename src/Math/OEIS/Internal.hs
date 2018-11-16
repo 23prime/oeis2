@@ -83,8 +83,8 @@ getResults ss start bound vs = do
       results = case results' of
         Nothing -> return V.empty
         _       ->
-          let vs' = fromJust results'
-              len = length vs'
+          let vs'    = fromJust results'
+              len    = length vs'
               start' = start + 10
               diff   = case bound of
                          0 -> len
@@ -102,10 +102,7 @@ getResults ss start bound vs = do
 -- Get nth search result --
 getResult :: SearchStatus -> Int -> IO (Maybe Value)
 getResult ss n = do
-  let bound = case n of
-                0 -> 1
-                _ -> n + 1
-  results <- getResults ss 0 bound V.empty
+  results <- getResults ss 0 (n + 1) V.empty
   let result = results V.!? n
   return result
 
