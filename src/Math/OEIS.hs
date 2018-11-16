@@ -15,6 +15,7 @@ module Math.OEIS (
 
 import           Data.List
 import           Data.Maybe         (fromMaybe, listToMaybe)
+import qualified Data.Vector        as V
 import           System.IO.Unsafe   (unsafePerformIO)
 
 import           Math.OEIS.Internal
@@ -39,15 +40,16 @@ import           Math.OEIS.Types
 --
 -- > ghci>searchSeq (SubSeq [1,1,4,5,1,4,1,9,1,9,8,9,3]) 0
 -- > []
-searchSeq' :: SearchStatus -> Int -> IO [OEISSeq]
+searchSeq' :: SearchStatus -> Int -> IO (V.Vector OEISSeq)
 searchSeq' ss bound = do
-  results' <- getResults ss 0 bound $ Just []
-  let seq = case results' of
-              Just results -> parseOEIS <$> results
-              _            -> []
+  results' <- getResults ss 0 bound V.empty
+  let seq = case V.toList results' of
+--  let seq   = case results' of
+              [] -> V.empty
+              _  -> parseOEIS <$> results'
   return seq
 
-searchSeq :: SearchStatus -> Int -> [OEISSeq]
+searchSeq :: SearchStatus -> Int -> V.Vector OEISSeq
 searchSeq ss = unsafePerformIO . searchSeq' ss
 
 

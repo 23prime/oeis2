@@ -5,6 +5,7 @@ import           Data.Aeson.Types
 import           Data.List
 import qualified Data.Text             as T
 import qualified Data.Text.IO          as T
+import qualified Data.Vector           as V
 import           System.IO
 import           System.IO.Unsafe      (unsafePerformIO)
 import           Test.Hspec
@@ -20,20 +21,20 @@ main = do
     withFile "./test/docs/result.txt" ReadMode $ \handle2 -> do
       testJSON    <- T.hGetContents handle1
       testResult' <- hGetContents handle2
-      let testResult = read testResult' :: [OEISSeq]
+      let testResult = read testResult' :: V.Vector OEISSeq
       hspec $ specSearchSeq testJSON testResult
   hspec specLookupSeq
   hspec specGetSeqData
   hspec specExtendSeq
 
-specSearchSeq :: T.Text -> [OEISSeq] -> Spec
+specSearchSeq :: T.Text -> V.Vector OEISSeq -> Spec
 specSearchSeq jsn seq = describe "Test for searchSeq" $ do
   it "Number of all search results" $
     length (searchSeq (SubSeq [1, 2, 3, 6, 11, 23, 47, 106]) 0) `shouldBe` 2
   it "Get some of search results" $
     searchSeq (JSN jsn) 10 `shouldBe` seq
   it "No search results" $
-    searchSeq (SubSeq [1, 2, 3, 6, 11, 23, 47, 106, 237]) 0 `shouldBe` []
+    searchSeq (SubSeq [1, 2, 3, 6, 11, 23, 47, 106, 237]) 0 `shouldBe` V.empty
 
 specLookupSeq :: Spec
 specLookupSeq = describe "Test for lookupSeq" $ do

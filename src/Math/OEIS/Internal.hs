@@ -12,6 +12,7 @@ import           Data.Maybe          (fromJust, fromMaybe, isNothing)
 import qualified Data.Text           as T
 import qualified Data.Text.Encoding  as T
 import qualified Data.Text.IO        as T
+import qualified Data.Vector         as V
 import           Network.HTTP.Simple (getResponseBody, httpBS, parseRequest)
 
 import           Math.OEIS.Types
@@ -74,16 +75,16 @@ getJSON (JSN txt) _       = return txt -- for test
 -- Parse JSON --
 ----------------
 -- Get all search results --
-getResults :: SearchStatus -> Int-> Int -> Maybe [Value] -> IO (Maybe [Value])
+getResults :: SearchStatus -> Int-> Int -> V.Vector Value -> IO (V.Vector Value)
 getResults ss start bound vs = do
   when (bound < 0) $ fail "Upper-bound number of search results mast be non-negative."
   jsn <- getJSON ss start
   let results' = jsn ^? key "results" . _Array
-      len = length $ fromJust results'
       results = case results' of
-        Nothing -> return Nothing
+        Nothing -> return V.empty
         _       ->
-          let vs'    = Just $ (\i -> jsn ^?! key "results" . nth i) <$> [0..(len - 1)]
+          let vs' = fromJust results'
+              len = length vs'
               start' = start + 10
               diff   = case bound of
                          0 -> len
@@ -93,9 +94,9 @@ getResults ss start bound vs = do
                JSN _    -> return vs'
                SubSeq _ ->
                 if bound /= 0 && diff <= 10 || len /= 10 then
-                  return $ (++) <$> vs <*> (take diff <$> vs')
+                  return $ vs V.++ V.take diff vs'
                 else
-                  getResults ss start' bound $ (++) <$> vs <*> vs'
+                  getResults ss start' bound $ vs V.++ vs'
   results
 
 -- Get nth search result --
@@ -104,8 +105,8 @@ getResult ss n = do
   let bound = case n of
                 0 -> 1
                 _ -> n + 1
-  results <- getResults ss 0 bound $ Just []
-  let result = (!! n) <$> results
+  results <- getResults ss 0 bound V.empty
+  let result = results V.!? n
   return result
 
 -- Get each data in result --
@@ -133,7 +134,7 @@ getData result k
           "id"      -> (k, TXTS . T.splitOn " " <$> d)
           _         -> (k, TXT <$> d)
   | k `elem` textsKeys
-  = let ds  = result ^? key k ._Array
+  = let ds  = result ^? key k . _Array
     in case ds of
          Nothing -> (k, Nothing)
          _       -> let ts  = (\i -> result ^?! key k . nth i . _String) <$> [0..(len - 1)]
