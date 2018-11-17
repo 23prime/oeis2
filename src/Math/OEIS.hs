@@ -43,11 +43,10 @@ import           Math.OEIS.Types
 searchSeq' :: SearchStatus -> Int -> IO (V.Vector OEISSeq)
 searchSeq' ss bound = do
   results' <- getResults ss 0 bound V.empty
-  let seq = case V.toList results' of
---  let seq   = case results' of
-              [] -> V.empty
-              _  -> parseOEIS <$> results'
-  return seq
+  let seqs
+        | V.null results' = V.empty
+        | otherwise       = parseOEIS <$> results'
+  return seqs
 
 searchSeq :: SearchStatus -> Int -> V.Vector OEISSeq
 searchSeq ss = unsafePerformIO . searchSeq' ss
@@ -69,10 +68,9 @@ lookupSeq = unsafePerformIO . lookupSeq'
 lookupSeq' :: SearchStatus -> IO (Maybe OEISSeq)
 lookupSeq' ss = do
   result <- getResult ss 0
-  let seq = case result of
-              Just result' -> Just $ parseOEIS result'
-              _            -> Nothing
-  return seq
+  return $ case result of
+             Just result' -> Just $ parseOEIS result'
+             _            -> Nothing
 
 
 -- | Get sub-sequence on OEIS.
@@ -90,7 +88,7 @@ getSeqData = unsafePerformIO . getSeqData'
 
 -- | getSeqData in IO
 getSeqData' :: SearchStatus -> IO (Maybe SeqData)
-getSeqData' = (<$>) (seqData <$>) . lookupSeq'
+getSeqData' = ((seqData <$>) <$>) . lookupSeq'
 
 
 -- | Extend from sub-sequence.
@@ -99,6 +97,9 @@ getSeqData' = (<$>) (seqData <$>) . lookupSeq'
 --
 -- > ghci>extendSeq [1,2,3,4]
 -- > [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77]
+--
+-- > ghci> extendSeq [1,3,2,5,6,1,6]
+-- > [1,3,2,5,6,1,6]
 extendSeq :: SeqData -> SeqData
 extendSeq = unsafePerformIO . extendSeq'
 
@@ -108,8 +109,8 @@ extendSeq' [] = return []
 extendSeq' sd = do
   oeis <- lookupSeq' (SubSeq sd)
   return $ case oeis of
-    Nothing -> sd
-    Just s  -> extend sd (seqData s)
+    Just s -> extend sd (seqData s)
+    _      -> sd
   where
     extend :: SeqData -> SeqData -> SeqData
     extend sd ext = fromMaybe sd . listToMaybe . filter (sd `isPrefixOf`) $ tails ext
