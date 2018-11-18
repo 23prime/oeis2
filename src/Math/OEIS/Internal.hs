@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedLists   #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Math.OEIS.Internal where
@@ -45,30 +46,33 @@ keys = intKeys ++ textKeys ++ textsKeys :: Texts
 ----------------------
 -- Get JSON of OEIS --
 ----------------------
-baseSearchURI :: Int -> String
-baseSearchURI n = "https://oeis.org/search?fmt=json&start=" ++ show n ++"&q="
-
-seqSearchURI :: SeqData -> Int -> String
-seqSearchURI subSeq n = baseSearchURI n ++ showSeqData subSeq
-
-idSearchURI :: String -> String
-idSearchURI n = baseSearchURI 0 ++ "id:" ++ n
-
-showSeqData :: SeqData -> String
-showSeqData = tail . init . show
+showSeqData :: SeqData -> T.Text
+showSeqData = T.pack . tail . init . show
 
 readSeqData :: String -> SeqData
 readSeqData str = case reads ("[" ++ str ++ "]") of
                     [(sd, "")] -> sd
                     _          -> []
 
-openURL :: String -> IO T.Text
-openURL x = T.decodeUtf8 . getResponseBody <$> (httpBS =<< parseRequest x)
+baseSearchURI :: T.Text
+baseSearchURI = "https://oeis.org/search?fmt=json&q="
+
+addPrefix :: SearchStatus -> T.Text
+addPrefix (SubSeq ints) = "seq:" +.+ showSeqData ints
+addPrefix ss            = let (cst, txt) = T.breakOn " " $ T.pack $ show ss
+                              pref       = T.toLower cst +.+ ":"
+                              txt'       = T.init $ T.tail $ T.strip txt
+                          in pref +.+ txt'
+
+searchURI :: SearchStatus -> T.Text
+searchURI ss = baseSearchURI +.+ addPrefix ss
+
+openURL :: T.Text -> IO T.Text
+openURL x = T.decodeUtf8 . getResponseBody <$> (httpBS =<< parseRequest (T.unpack x))
 
 getJSON :: SearchStatus -> Int -> IO T.Text
-getJSON (ID str) _        = openURL $ idSearchURI str
-getJSON (SubSeq subSeq) n = openURL $ seqSearchURI subSeq n
-getJSON (JSN txt) _       = return txt -- for test
+getJSON (Others txt) _ = return txt -- for test
+getJSON ss n           = openURL $ searchURI ss +.+ "&start=" +.+ T.pack (show n)
 
 
 ----------------
@@ -81,7 +85,7 @@ getResults ss start bound vs = do
   jsn <- getJSON ss start
   let results' = jsn ^? key "results" . _Array
       results = case results' of
-        Nothing -> return V.empty
+        Nothing -> return []
         _       ->
           let vs'    = fromJust results'
               len    = length vs'
@@ -91,8 +95,8 @@ getResults ss start bound vs = do
                          _ -> bound - start
           in case ss of
                ID _     -> return vs'
-               JSN _    -> return vs'
-               SubSeq _ ->
+               Others _ -> return vs'
+               _ ->
                 if bound /= 0 && diff <= 10 || len /= 10 then
                   return $ vs V.++ V.take diff vs'
                 else
@@ -102,7 +106,7 @@ getResults ss start bound vs = do
 -- Get nth search result --
 getResult :: SearchStatus -> Int -> IO (Maybe Value)
 getResult ss n = do
-  results <- getResults ss 0 (n + 1) V.empty
+  results <- getResults ss 0 (n + 1) []
   let result = results V.!? n
   return result
 

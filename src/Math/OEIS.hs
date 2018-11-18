@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedLists #-}
+
 module Math.OEIS (
   -- * Types
   SeqData,
@@ -42,9 +44,9 @@ import           Math.OEIS.Types
 -- > []
 searchSeq' :: SearchStatus -> Int -> IO (V.Vector OEISSeq)
 searchSeq' ss bound = do
-  results' <- getResults ss 0 bound V.empty
+  results' <- getResults ss 0 bound []
   let seqs
-        | V.null results' = V.empty
+        | V.null results' = []
         | otherwise       = parseOEIS <$> results'
   return seqs
 
