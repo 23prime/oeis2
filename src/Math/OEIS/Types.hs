@@ -5,9 +5,33 @@ import qualified Data.Text as T
 type SeqData = [Integer]
 type Texts = [T.Text]
 
-data SearchStatus = ID String
+-- Prefixes
+{-
+id:                     ref:                    program:
+seq:                    link:                   xref:
+signed:                 formula:                keyword:
+name:                   example:                author:
+offset:                 maple:                  extension:
+comment:                mathematica:
+-}
+data SearchStatus = ID T.Text
                   | SubSeq SeqData
-                  | JSN T.Text -- for test
+                  | Signed T.Text
+                  | Name T.Text
+                  | Comment T.Text
+                  | Ref T.Text
+                  | Link T.Text
+                  | Formla T.Text
+                  | Example T.Text
+                  | Maple T.Text
+                  | Mathematica T.Text
+                  | Offset T.Text
+                  | Program T.Text
+                  | XRef T.Text
+                  | KeyWord T.Text
+                  | Author T.Text
+                  | Extension T.Text
+                  | Others T.Text
   deriving (Show, Eq)
 
 --data Language = Haskell | PARI | L T.Text deriving (Show, Eq)

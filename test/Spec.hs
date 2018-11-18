@@ -32,7 +32,7 @@ specSearchSeq jsn seq = describe "Test for searchSeq" $ do
   it "Number of all search results" $
     length (searchSeq (SubSeq [1, 2, 3, 6, 11, 23, 47, 106]) 0) `shouldBe` 2
   it "Get some of search results" $
-    searchSeq (JSN jsn) 10 `shouldBe` seq
+    searchSeq (Others jsn) 10 `shouldBe` seq
   it "No search results" $
     searchSeq (SubSeq [1, 2, 3, 6, 11, 23, 47, 106, 237]) 0 `shouldBe` V.empty
 
@@ -44,11 +44,11 @@ specLookupSeq = describe "Test for lookupSeq" $ do
     \x ->
     let rs   = unsafePerformIO $ generate $ resize 5 $ vectorOf x $ choose (1, 10)
         seq1 = lookupSeq (SubSeq rs)
-        num  = T.unpack $ maybe "" number seq1
+        num  = maybe "" number seq1
         seq2 = lookupSeq (ID num)
     in seq2 `shouldBe` seq1
   it "Get Maple function" $
-    fmap maple (lookupSeq (ID "A000027")) `shouldBe`
+    maple <$> lookupSeq (ID "A000027") `shouldBe`
     Just ["A000027 := n->n; seq(A000027(n), n=1..100);"]
   it "No search results" $
     lookupSeq (SubSeq [1,3,4,5,4,3,6]) `shouldBe` Nothing
