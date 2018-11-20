@@ -79,16 +79,15 @@ getJSON ss n           = openURL $ searchURI ss +.+ "&start=" +.+ T.pack (show n
 -- Parse JSON --
 ----------------
 -- Get all search results --
-getResults :: SearchStatus -> Int-> Int -> V.Vector Value -> IO (V.Vector Value)
+getResults :: SearchStatus -> Int -> Int -> V.Vector Value -> IO (V.Vector Value)
 getResults ss start bound vs = do
   when (bound < 0) $ fail "Upper-bound number of search results mast be non-negative."
   jsn <- getJSON ss start
   let results' = jsn ^? key "results" . _Array
       results = case results' of
-        Nothing -> return []
-        _       ->
-          let vs'    = fromJust results'
-              len    = length vs'
+        Nothing  -> return []
+        Just vs' ->
+          let len    = length vs'
               start' = start + 10
               diff   = case bound of
                          0 -> len
