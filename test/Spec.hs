@@ -3,6 +3,7 @@
 import           Data.Aeson.Lens
 import           Data.Aeson.Types
 import           Data.List
+import           Data.Maybe            (fromJust)
 import qualified Data.Text             as T
 import qualified Data.Text.IO          as T
 import qualified Data.Vector           as V
@@ -13,6 +14,7 @@ import           Test.Hspec.QuickCheck
 import           Test.QuickCheck.Gen
 
 import           Math.OEIS
+import           Math.OEIS.Internal
 
 
 main :: IO ()
@@ -30,7 +32,8 @@ main = do
 specSearchSeq :: T.Text -> V.Vector OEISSeq -> Spec
 specSearchSeq jsn seq = describe "Test for searchSeq" $ do
   it "Number of all search results" $
-    length (searchSeq (SubSeq [1, 2, 3, 6, 11, 23, 47, 106]) 0) `shouldBe` 2
+    length (searchSeq (SubSeq [1,2,2,3,3,3,4,4,4,4]) 0) `shouldBe`
+    fromJust (unsafePerformIO $ resultLen (SubSeq [1,2,2,3,3,3,4,4,4,4]))
   it "Get some of search results" $
     searchSeq (Others jsn) 10 `shouldBe` seq
   it "No search results" $

@@ -15,6 +15,7 @@ import qualified Data.Text.Encoding  as T
 import qualified Data.Text.IO        as T
 import qualified Data.Vector         as V
 import           Network.HTTP.Simple (getResponseBody, httpBS, parseRequest)
+import           System.IO.Unsafe    (unsafePerformIO)
 
 import           Math.OEIS.Types
 
@@ -144,6 +145,11 @@ getData result k
                                       in (k, Just $ PRGS prgs)
                          _         -> (k, Just $ TXTS ts)
   | otherwise = (k, Nothing)
+
+resultLen :: SearchStatus -> IO (Maybe Int)
+resultLen ss = do
+  jsn <- getJSON ss 0
+  return $ fromInteger <$> jsn ^? key "count" . _Integer
 
 emptyOEIS :: OEISSeq
 emptyOEIS = OEIS "" [] [] "" [] [] [] [] [] [] [] [] [] [] 0 "" [] 0 0 "" ""
