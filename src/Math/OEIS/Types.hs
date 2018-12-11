@@ -5,15 +5,6 @@ import qualified Data.Text as T
 type SeqData = [Integer]
 type Texts = [T.Text]
 
--- Prefixes
-{-
-id:                     ref:                    program:
-seq:                    link:                   xref:
-signed:                 formula:                keyword:
-name:                   example:                author:
-offset:                 maple:                  extension:
-comment:                mathematica:
--}
 data SearchStatus = ID T.Text
                   | SubSeq SeqData
                   | Signed T.Text
@@ -21,7 +12,7 @@ data SearchStatus = ID T.Text
                   | Comment T.Text
                   | Ref T.Text
                   | Link T.Text
-                  | Formla T.Text
+                  | Formula T.Text
                   | Example T.Text
                   | Maple T.Text
                   | Mathematica T.Text
