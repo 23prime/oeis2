@@ -1,18 +1,17 @@
 {-# LANGUAGE OverloadedLists #-}
 
 module Math.OEIS (
+  -- * Functions
+  searchSeq,  searchSeq',
+  lookupSeq,  lookupSeq',
+  getSeqData, getSeqData',
+  extendSeq,  extendSeq',
+
   -- * Types
   SeqData,
   SearchStatus(..),
---  Language(..),
   Keyword(..),
-  OEISSeq(..),
-
-  -- * Functions
-  searchSeq',  searchSeq,
-  lookupSeq',  lookupSeq,
-  getSeqData', getSeqData,
-  extendSeq',  extendSeq
+  OEISSeq(..)
   ) where
 
 import           Data.List
@@ -42,6 +41,10 @@ import           Math.OEIS.Types
 --
 -- > ghci>searchSeq (SubSeq [1,1,4,5,1,4,1,9,1,9,8,9,3]) 0
 -- > []
+searchSeq :: SearchStatus -> Int -> V.Vector OEISSeq
+searchSeq ss = unsafePerformIO . searchSeq' ss
+
+-- | searchSeq in IO
 searchSeq' :: SearchStatus -> Int -> IO (V.Vector OEISSeq)
 searchSeq' ss bound = do
   results' <- getResults ss 0 bound []
@@ -49,9 +52,6 @@ searchSeq' ss bound = do
         | V.null results' = []
         | otherwise       = parseOEIS <$> results'
   return seqs
-
-searchSeq :: SearchStatus -> Int -> V.Vector OEISSeq
-searchSeq ss = unsafePerformIO . searchSeq' ss
 
 
 -- | Look up a sequence on OEIS.

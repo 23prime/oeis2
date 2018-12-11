@@ -1,30 +1,31 @@
--- This file has been generated from package.yaml by hpack version 0.28.2.
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: dfea261a0cd8b7a597f5717df1093a6c7c1acf8250c469966c4c360b62652f15
+-- hash: 095c88dee1d7a8ab374d40fbe829e90cf374e0e4729021b6836706c365a25b94
 
 name:           oeis2
-version:        0.1.0
+version:        1.0.0
 synopsis:       Interface for Online Encyclopedia of Integer Sequences (OEIS).
-description:    Please see the README on GitHub at <https://github.com/23_prime/oeis2#readme>
+description:    Please see the README on GitHub at <https://github.com/23prime/oeis2#Readme.md>
 category:       Math
-homepage:       https://github.com/23_prime/oeis2#readme
-bug-reports:    https://github.com/23_prime/oeis2/issues
-author:         okkey
+homepage:       https://github.com/23prime/oeis2#readme
+bug-reports:    https://github.com/23prime/oeis2/issues
+author:         Taisuke Hikawa
 maintainer:     a23b23c23d23e@gmail.com
-copyright:      2018 okkey
+copyright:      2018 Taisuke Hikawa
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
-cabal-version:  >= 1.10
 extra-source-files:
-    ChangeLog.md
     README.md
+    ChangeLog.md
 
 source-repository head
   type: git
-  location: https://github.com/23_prime/oeis2
+  location: https://github.com/23prime/oeis2
 
 library
   exposed-modules:

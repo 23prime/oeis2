@@ -8,19 +8,12 @@ Haskell interface for [Online Encyclopedia of Integer Sequences](https://oeis.or
   : [oeis](http://hackage.haskell.org/package/oeis) use `fmt=text`, but this library use `fmt=json`.
 - Possible to get all search results.
 - Search functions from ID or sub-sequence are merged.
+- Possibele to search from **other** than ID or sub-sequence.
 - Support for HTTPS.
 
 ## Usage
 
-If using Stack, add the following to `stack.yaml`.
-
-```yaml
-extra-deps:
-- github: 23prime/oeis2
-  commit: HEAD
-```
-
-And, add import statement.
+Add import statement.
 
 ```haskell
 import Math.OEIS
@@ -53,11 +46,11 @@ import Math.OEIS
     Just [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,6,6,6,6,6,6,7,7,7,7,7,7,7,...
     ```
 
--  Get Maple function from sub-sequence
+-  Get Mathematica function from sub-sequence
 
     ```haskell
-    ghci>maple <$> lookupSeq (SubSeq [1,2,2,3,3,3,4,4,4,4])
-    Just ["A002024 := n-> ceil((sqrt(1+8*n)-1)/2); seq(A002024(n), n=1..100);"]
+    ghci>mathematica <$> lookupSeq (SubSeq [1,2,2,3,3,3,4,4,4,4])
+    Just ["a[1] = 1; a[n_] := a[n] = a[n - a[n - 1]] + 1 (* _Branko Curgus_, May 12 2009 *)","Table[n, {n, 13}, {n}] // Flatten (* _Robert G. Wilson v_, May 11 2010 *)"]
     ```
 
 - If no search result
