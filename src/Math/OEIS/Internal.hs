@@ -24,10 +24,10 @@ import           Math.OEIS.Types
 -- JSON Keys --
 ---------------
 intKeys = [
-  "number", "offset", "references", "revision"
+  "number", "references", "revision"
   ]
 textKeys = [
-  "id", "data", "name", "keyword", "author", "time", "created"
+  "id", "data", "name", "keyword", "offset", "author", "time", "created"
   ]
 textsKeys = [
   "comment", "reference", "link", "formula", "example", "maple", "mathematica",
@@ -133,6 +133,7 @@ getData result k
           "data"    -> let d' = T.unpack $ '[' .+ fromJust d +. ']'
                        in (k, Just $ SEQ (read d' :: SeqData))
           "id"      -> (k, TXTS . T.splitOn " " <$> d)
+          "offset"  -> (k, INT . read . T.unpack . T.take 1 <$> d)
           _         -> (k, TXT <$> d)
   | k `elem` textsKeys
   = let ds  = result ^? key k . _Array
