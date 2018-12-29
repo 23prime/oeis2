@@ -213,7 +213,10 @@ parsePrograms _ prgs [] = prgs
 parsePrograms (lang0, funcs) prgs (t : ts)
   | T.head t == '(' = let prgs' = prgs ++ [(lang, [func])]
                       in parsePrograms (lang, [func]) prgs' ts
-  | otherwise       = let prgs' = init prgs ++ [(lang0, funcs ++ [t])]
+  | null prgs       = let prgs' = prgs ++ [("", [t])]
+                      in parsePrograms ("", [t]) prgs' ts
+  | otherwise       = let funcs' = filter (not . T.null) funcs ++ [t]
+                          prgs'  = init prgs ++ [(lang0, funcs')]
                       in parsePrograms (lang0, funcs ++ [t]) prgs' ts
   where
     (lang', func') = T.breakOn ")" t
