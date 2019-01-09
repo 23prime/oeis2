@@ -8,12 +8,11 @@ copyright:           "2018 Taisuke Hikawa"
 
 extra-source-files:
 - README.md
-- ChangeLog.md
 
 synopsis:            Interface for Online Encyclopedia of Integer Sequences (OEIS).
 category:            Math
 
-description:         Please see the README on GitHub at <https://github.com/23prime/oeis2#readme>
+description:         Release notes is https://github.com/23prime/oeis2/releases
 
 dependencies:
 - base         >= 4.7  && < 5
