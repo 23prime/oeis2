@@ -46,7 +46,7 @@ import Math.OEIS
     Just [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,6,6,6,6,6,6,7,7,7,7,7,7,7,...
     ```
 
--  Get Mathematica function from sub-sequence
+- Get Mathematica function from sub-sequence
 
     ```haskell
     ghci>mathematica <$> lookupSeq (SubSeq [1,2,2,3,3,3,4,4,4,4])
