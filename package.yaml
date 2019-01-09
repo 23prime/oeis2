@@ -1,10 +1,10 @@
 name:                oeis2
-version:             1.0.0
+version:             1.0.1
 github:              "23prime/oeis2"
 license:             BSD3
 author:              "Taisuke Hikawa"
 maintainer:          "a23b23c23d23e@gmail.com"
-copyright:           "2018 Taisuke Hikawa"
+copyright:           "2019 Taisuke Hikawa"
 
 extra-source-files:
 - README.md
@@ -12,7 +12,7 @@ extra-source-files:
 synopsis:            Interface for Online Encyclopedia of Integer Sequences (OEIS).
 category:            Math
 
-description:         Release notes is https://github.com/23prime/oeis2/releases
+description:         Release notes are here https://github.com/23prime/oeis2/releases
 
 dependencies:
 - base         >= 4.7  && < 5
