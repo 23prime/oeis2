@@ -19,31 +19,15 @@ import           Math.OEIS.Internal
 
 main :: IO ()
 main = do
-  withFile "./test/docs/test.json" ReadMode $ \handle1 ->
-    withFile "./test/docs/result.txt" ReadMode $ \handle2 -> do
-      testJSON    <- T.hGetContents handle1
-      testResult' <- hGetContents handle2
-      let testResult = read testResult' :: V.Vector OEISSeq
-      hspec $ specSearchSeq testJSON testResult
   hspec specLookupSeq
   hspec specGetSeqData
   hspec specExtendSeq
-
-specSearchSeq :: T.Text -> V.Vector OEISSeq -> Spec
-specSearchSeq jsn seq = describe "Test for searchSeq" $ do
-  it "Number of all search results" $
-    length (searchSeq (SubSeq [1,2,2,3,3,3,4,4,4,4]) 0) `shouldBe`
-    fromJust (unsafePerformIO $ resultLen (SubSeq [1,2,2,3,3,3,4,4,4,4]))
-  it "Get some of search results" $
-    searchSeq (Others jsn) 10 `shouldBe` seq
-  it "No search results" $
-    searchSeq (SubSeq [1, 2, 3, 6, 11, 23, 47, 106, 237]) 0 `shouldBe` V.empty
 
 specLookupSeq :: Spec
 specLookupSeq = describe "Test for lookupSeq" $ do
   it "Compare lookup by ID with by SubSeq" $
     lookupSeq (ID "A000027") `shouldBe` lookupSeq (SubSeq [1, 2, 3, 4, 5, 6, 7])
-  prop "Compare lookup by ID with by SubSeq -2" $
+  modifyMaxSuccess (const 10) $ prop "Compare lookup by ID with by SubSeq -2" $
     \x ->
     let rs   = unsafePerformIO $ generate $ resize 5 $ vectorOf x $ choose (1, 10)
         seq1 = lookupSeq (SubSeq rs)
@@ -65,7 +49,7 @@ specGetSeqData = describe "Test for getSeqData" $ do
 
 specExtendSeq :: Spec
 specExtendSeq = describe "Test for extendSeq" $ do
-  prop "Extend Seq" $
+  modifyMaxSuccess (const 10) $ prop "Extend Seq" $
     \x ->
     let rs = unsafePerformIO $ generate $ resize 5 $ vectorOf x $ choose (1, 10)
         seq = extendSeq rs
