@@ -1,5 +1,8 @@
 # oeis2
 
+[![Build Status](https://travis-ci.org/23prime/oeis2.svg?branch=master)](https://travis-ci.org/23prime/oeis2)
+
+
 Haskell interface for [Online Encyclopedia of Integer Sequences](https://oeis.org/); homage to [oeis](http://hackage.haskell.org/package/oeis).
 
 ## Difference from  [oeis](http://hackage.haskell.org/package/oeis)
