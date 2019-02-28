@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1bb4f370d4dea6a37f1e1170dc4e579f63b631fd8dce2a171c31374e096bb5e5
+-- hash: 7b2834a56748a3e04b9cea66a40078c9652675717ba9a3a9171492c20237ecab
 
 name:           oeis2
 version:        1.0.1
@@ -14,7 +14,7 @@ category:       Math
 homepage:       https://github.com/23prime/oeis2#readme
 bug-reports:    https://github.com/23prime/oeis2/issues
 author:         Taisuke Hikawa
-maintainer:     a23b23c23d23e@gmail.com
+maintainer:     23.prime.37@gmail.com
 copyright:      2019 Taisuke Hikawa
 license:        BSD3
 license-file:   LICENSE

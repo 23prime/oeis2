@@ -3,7 +3,7 @@ version:             1.0.1
 github:              "23prime/oeis2"
 license:             BSD3
 author:              "Taisuke Hikawa"
-maintainer:          "a23b23c23d23e@gmail.com"
+maintainer:          "23.prime.37@gmail.com"
 copyright:           "2019 Taisuke Hikawa"
 
 extra-source-files:
