@@ -8,6 +8,7 @@ import           Control.Monad       (when)
 import           Data.Aeson.Lens
 import           Data.Aeson.Types
 import           Data.Char
+import           Data.Functor
 import           Data.List
 import           Data.Maybe          (fromJust, fromMaybe, isNothing)
 import qualified Data.Text           as T
@@ -88,7 +89,7 @@ getResults ss start bound vs = do
       results = case results' of
         Nothing  -> return []
         Just vs' ->
-          let len    = length vs'
+          let len    = V.length vs'
               start' = start + 10
               diff   = case bound of
                          0 -> len
@@ -140,7 +141,7 @@ getData result k
     in case ds of
          Nothing -> (k, Nothing)
          _       -> let ts  = (\i -> result ^?! key k . nth i . _String) <$> [0..(len - 1)]
-                        len = fromJust $ length <$> ds
+                        len = fromJust $ V.length <$> ds
                     in case k of
                          "program" -> let prgs = parsePrograms emptyProgram [] ts
                                       in (k, Just $ PRGS prgs)

@@ -14,6 +14,7 @@ module Math.OEIS (
   OEISSeq(..)
   ) where
 
+import           Data.Functor
 import           Data.List
 import           Data.Maybe         (fromMaybe, listToMaybe)
 import qualified Data.Vector        as V
