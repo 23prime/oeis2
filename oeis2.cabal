@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7b2834a56748a3e04b9cea66a40078c9652675717ba9a3a9171492c20237ecab
+-- hash: 622ea870f9adfbc723003417b655522c3b76680af7570ff1e1e4c2be8ba1ceca
 
 name:           oeis2
-version:        1.0.1
+version:        1.0.2
 synopsis:       Interface for Online Encyclopedia of Integer Sequences (OEIS).
 description:    Release notes are here https://github.com/23prime/oeis2/releases
 category:       Math
