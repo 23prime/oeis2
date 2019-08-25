@@ -2,7 +2,6 @@
 
 import           Data.Aeson.Lens
 import           Data.Aeson.Types
-import           Data.Functor
 import           Data.List
 import           Data.Maybe            (fromJust)
 import qualified Data.Text             as T
