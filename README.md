@@ -1,9 +1,12 @@
 # oeis2
 
-[![Build Status](https://travis-ci.org/23prime/oeis2.svg?branch=master)](https://travis-ci.org/23prime/oeis2)
+[![Travis Build Status](https://travis-ci.org/23prime/oeis2.svg?branch=master)](https://travis-ci.org/23prime/oeis2)
+[![Haskell](https://img.shields.io/badge/Language-Haskell-yellowgreen.svg)](https://www.haskell.org)
+[![Hackage version](https://img.shields.io/hackage/v/oeis2.svg?label=Hackage&color=4cc41c)](https://hackage.haskell.org/package/oeis2)
+[![Stackage version](https://www.stackage.org/package/oeis2/badge/lts?label=Stackage)](https://www.stackage.org/package/oeis2)
+[![BSD3](https://img.shields.io/badge/License-BSD-blue.svg)](https://en.wikipedia.org/wiki/BSD_License)
 
-
-Haskell interface for [Online Encyclopedia of Integer Sequences](https://oeis.org/); homage to [oeis](http://hackage.haskell.org/package/oeis).
+Haskell interface for [Online Encyclopedia of Integer Sequences](https://oeis.org/); homage to [oeis](http://hackage.haskell.org/package/oeis2).
 
 ## Difference from  [oeis](http://hackage.haskell.org/package/oeis)
 
