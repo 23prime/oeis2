@@ -114,7 +114,13 @@ getResult ss n = do
 -- Get each data in result --
 getData :: Value -> T.Text -> (T.Text, Maybe OEISData)
 getData result k
-  | k `elem` intKeys
+  | k `elem` intKeys   = getIntData result k
+  | k `elem` textKeys  = getTextData result k
+  | k `elem` textsKeys = getTextsData result k
+  | otherwise          = (k, Nothing)
+
+getIntData :: Value -> T.Text -> (T.Text, Maybe OEISData)
+getIntData result k
   = let d = result ^? key k ._Integer
     in case d of
       Nothing -> (k, Nothing)
@@ -124,7 +130,9 @@ getData result k
                           len = T.length d'
                       in (k, Just $ TXT $ 'A' .+ T.replicate (6 - len) "0" +.+ d')
           _        -> (k, INT <$> d)
-  | k `elem` textKeys
+
+getTextData :: Value -> T.Text -> (T.Text, Maybe OEISData)
+getTextData result k
   = let d = result ^? key k ._String
     in case d of
       Nothing -> (k, Nothing)
@@ -136,17 +144,20 @@ getData result k
           "id"      -> (k, TXTS . T.splitOn " " <$> d)
           "offset"  -> (k, INT . read . T.unpack . T.take 1 <$> d)
           _         -> (k, TXT <$> d)
-  | k `elem` textsKeys
+
+getTextsData :: Value -> T.Text -> (T.Text, Maybe OEISData)
+getTextsData result k
   = let ds  = result ^? key k . _Array
     in case ds of
-         Nothing -> (k, Nothing)
-         _       -> let ts  = (\i -> result ^?! key k . nth i . _String) <$> [0..(len - 1)]
-                        len = fromJust $ V.length <$> ds
-                    in case k of
-                         "program" -> let prgs = parsePrograms emptyProgram [] ts
-                                      in (k, Just $ PRGS prgs)
-                         _         -> (k, Just $ TXTS ts)
-  | otherwise = (k, Nothing)
+      Nothing -> (k, Nothing)
+      _       ->
+        let ts  = (\i -> result ^?! key k . nth i . _String) <$> [0..(len - 1)]
+            len = fromJust $ V.length <$> ds
+        in case k of
+          "program" -> let prgs = parsePrograms emptyProgram [] ts
+                       in (k, Just $ PRGS prgs)
+          _         -> (k, Just $ TXTS ts)
+
 
 resultLen :: SearchStatus -> IO (Maybe Int)
 resultLen ss = do
