@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.1.
+-- This file has been generated from package.yaml by hpack version 0.31.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 622ea870f9adfbc723003417b655522c3b76680af7570ff1e1e4c2be8ba1ceca
+-- hash: 579412ca0cef21306152f58f2e61a04dbbb18349468ddb45eb61c1dd332e590d
 
 name:           oeis2
 version:        1.0.2
@@ -40,8 +40,8 @@ library
     , base >=4.7 && <5
     , containers >=0.5 && <0.7
     , http-conduit >=2.2 && <2.4
-    , lens >=4.15 && <4.18
-    , lens-aeson >=1.0 && <1.1
+    , lens >=4.15 && <5
+    , lens-aeson >=1.0 && <1.2
     , text >=1.2 && <1.3
     , vector >=0.12 && <0.13
   default-language: Haskell2010
@@ -61,8 +61,8 @@ test-suite oeis2-test
     , containers >=0.5 && <0.7
     , hspec
     , http-conduit >=2.2 && <2.4
-    , lens >=4.15 && <4.18
-    , lens-aeson >=1.0 && <1.1
+    , lens >=4.15 && <5
+    , lens-aeson >=1.0 && <1.2
     , oeis2
     , text >=1.2 && <1.3
     , vector >=0.12 && <0.13
