@@ -2,3 +2,5 @@
 haddock/
 *~
 .hlint.yaml
+stack.yaml.lock
+.vscode/
