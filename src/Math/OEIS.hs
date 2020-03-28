@@ -116,4 +116,4 @@ extendSeq' sd = do
     _      -> sd
   where
     extend :: SeqData -> SeqData -> SeqData
-    extend sd ext = fromMaybe sd . listToMaybe . filter (sd `isPrefixOf`) $ tails ext
+    extend sd ext = fromMaybe sd . find (sd `isPrefixOf`) $ tails ext
