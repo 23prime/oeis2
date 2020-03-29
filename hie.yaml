@@ -1,0 +1,6 @@
+cradle:
+  stack:
+    - path: ./src
+      component: "oeis2:lib"
+    - path: ./test
+      component: "oeis2:test:oeis2-test"

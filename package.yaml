@@ -23,8 +23,6 @@ dependencies:
 - lens         >= 4.15 && < 5
 - lens-aeson   >= 1.0  && < 1.2
 - http-conduit >= 2.2  && < 2.4
-# - hspec
-# - QuickCheck
 
 library:
   source-dirs: src
