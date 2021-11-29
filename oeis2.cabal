@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.3.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 124b846dc9ea45b282524fa4359f5ef03e0cfe14df8a63592fa5300a4444ec75
+-- hash: ddc8a715dd4c13f61ed6892b351c4e5f22a3779b00cf17d4f0bcc47ee28efc92
 
 name:           oeis2
 version:        1.0.5
@@ -36,14 +36,14 @@ library
   hs-source-dirs:
       src
   build-depends:
-      aeson >=1.1 && <1.6
+      aeson >=1.1 && <2.1
     , base >=4.7 && <5
     , containers >=0.5 && <0.7
     , http-conduit >=2.2 && <2.4
     , lens >=4.15 && <6
     , lens-aeson >=1.0 && <1.2
-    , text >=1.2 && <1.3
-    , vector >=0.12 && <0.13
+    , text ==1.2.*
+    , vector ==0.12.*
   default-language: Haskell2010
 
 test-suite oeis2-test
@@ -56,7 +56,7 @@ test-suite oeis2-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       QuickCheck
-    , aeson >=1.1 && <1.6
+    , aeson >=1.1 && <2.1
     , base >=4.7 && <5
     , containers >=0.5 && <0.7
     , hspec
@@ -64,6 +64,6 @@ test-suite oeis2-test
     , lens >=4.15 && <6
     , lens-aeson >=1.0 && <1.2
     , oeis2
-    , text >=1.2 && <1.3
-    , vector >=0.12 && <0.13
+    , text ==1.2.*
+    , vector ==0.12.*
   default-language: Haskell2010
