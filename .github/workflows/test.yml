@@ -9,14 +9,10 @@ on:
     branches:
       - master
       - develop
-    paths:
-      - "!**.md"
   pull_request:
     branches:
       - master
       - develop
-    paths:
-      - "!**.md"
 
 name: build
 
