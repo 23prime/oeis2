@@ -1,6 +1,6 @@
 # oeis2
 
-[![Travis Build Status](https://travis-ci.org/23prime/oeis2.svg?branch=master)](https://travis-ci.org/23prime/oeis2)
+[![GitHub Actions](https://github.com/23prime/oeis2/actions/workflows/test.yml/badge.svg)](https://github.com/23prime/oeis2/actions/workflows/test.yml)
 [![Haskell](https://img.shields.io/badge/Language-Haskell-yellowgreen.svg)](https://www.haskell.org)
 [![Hackage version](https://img.shields.io/hackage/v/oeis2.svg?label=Hackage&color=4cc41c)](https://hackage.haskell.org/package/oeis2)
 [![Stackage version](https://www.stackage.org/package/oeis2/badge/lts?label=Stackage)](https://www.stackage.org/package/oeis2)
