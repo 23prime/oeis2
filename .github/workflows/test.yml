@@ -60,8 +60,10 @@ jobs:
             resolver: lts-18.24
           - ghc: latest
             resolver: lts
-          - ghc: head
-            resolver: nightly
+          # Now, 'ghc: head' is unable
+          # See: https://github.com/haskell/actions/issues/93
+          # - ghc: head
+          #   resolver: nightly
 
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.plan.allow-fail == true }}
