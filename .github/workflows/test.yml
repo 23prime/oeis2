@@ -1,0 +1,102 @@
+# c.f.)
+# - https://github.com/haskell/actions/tree/main/setup
+# - https://debug-ito.hatenablog.com/entry/2021/02/28/121631
+# - https://stackoverflow.com/questions/68399221/github-actions-for-testing-haskell-package
+# - https://www.stackage.org
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+    paths:
+      - "!**.md"
+  pull_request:
+    branches:
+      - master
+      - develop
+    paths:
+      - "!**.md"
+
+name: build
+
+jobs:
+  test:
+    name: Stack Test
+
+    strategy:
+      fail-fast: false
+      matrix:
+        plan:
+          # - ghc: '8.0.1'
+          #   resolver: 'lts-7.24'
+          # - ghc: '8.0.2'
+          #   resolver: 'lts-9.21'
+          # - ghc: '8.2.2'
+          #   resolver: 'lts-11.22'
+          # - ghc: '8.4.3'
+          #   resolver: 'lts-12.14'
+          # - ghc: '8.4.4'
+          #   resolver: 'lts-12.26'
+          # - ghc: '8.6.3'
+          #   resolver: 'lts-13.11'
+          # - ghc: '8.6.4'
+          #   resolver: 'lts-13.19'
+          # - ghc: '8.6.5'
+          #   resolver: 'lts-14.27'
+          # - ghc: '8.8.2'
+          #   resolver: 'lts-15.3'
+          # - ghc: '8.8.3'
+          #   resolver: 'lts-16.11'
+          # - ghc: '8.8.4'
+          #   resolver: 'lts-16.31'
+          # - ghc: '8.10.3'
+          #   resolver: 'lts-17.2'
+          # - ghc: '8.10.4'
+          #   resolver: 'lts-18.6'
+          - ghc: '8.10.6'
+            resolver: 'lts-18.8'
+          - ghc: '8.10.7'
+            resolver: 'lts-18.24'
+          - ghc: 'latest'
+            resolver: 'lts'
+
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.plan.allow-fail == true }}
+    env:
+      STACK: stack --no-terminal --system-ghc --resolver ${{ matrix.plan.resolver }}
+
+    steps:
+      - name: Checkout
+      - uses: actions/checkout@v2
+
+      - uses: haskell/actions/setup@v1
+        with:
+          ghc-version: ${{ matrix.plan.ghc }}
+          enable-stack: true
+          stack-version: 'latest'
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.stack
+          key: ${{ runner.os }}-stack-${{ hashFiles('stack.yaml') }}-${{ matrix.plan.resolver }}
+
+      - name: Versions
+        run: |
+          ghc --version    
+          stack --version
+
+      - name: Configure
+        run: |
+          set -ex
+          rm -f stack.yaml.lock
+          $STACK clean
+
+      - name: Install dependencies
+        run: $STACK test --only-dependencies
+
+      - name: Build
+        run: $STACK build
+
+      - name: Test
+        run: $STACK test
