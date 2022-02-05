@@ -27,41 +27,41 @@ import Math.OEIS
 
 - Get all search results from sub-sequence
 
-    - If `n == 0`, you get all search results.
+  - If `n == 0`, you get all search results.
 
-        ```haskell
-        ghci>searchSeq (SubSeq [1,2,3,4]) 0
-        [OEIS {number = "A000027", ids = ["M0472","N0173"], seqData = [1,2,3,4,5,6,7,...
-        ghci>length it
-        53
-        ```
+    ```haskell
+    ghci>searchSeq (SubSeq [1,2,3,4]) 0
+    [OEIS {number = "A000027", ids = ["M0472","N0173"], seqData = [1,2,3,4,5,6,7,...
+    ghci>length it
+    53
+    ```
 
-    - Otherwise, you get first `n` search results.
+  - Otherwise, you get first `n` search results.
 
-        ```haskell
-        ghci>searchSeq (SubSeq [1,2,3,4]) 17
-        [OEIS {number = "A000027", ids = ["M0472","N0173"], seqData = [1,2,3,4,5,6,7,8,9,
-        ghci>length it
-        17
-        ```
+    ```haskell
+    ghci>searchSeq (SubSeq [1,2,3,4]) 17
+    [OEIS {number = "A000027", ids = ["M0472","N0173"], seqData = [1,2,3,4,5,6,7,8,9,
+    ghci>length it
+    17
+    ```
 
 - Get first few terms from sub-sequence
 
-    ```haskell
-    ghci>getSeqData (SubSeq [1,2,2,3,3,3,4,4,4,4])
-    Just [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,6,6,6,6,6,6,7,7,7,7,7,7,7,...
-    ```
+  ```haskell
+  ghci>getSeqData (SubSeq [1,2,2,3,3,3,4,4,4,4])
+  Just [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,6,6,6,6,6,6,7,7,7,7,7,7,7,...
+  ```
 
 - Get Mathematica function from sub-sequence
 
-    ```haskell
-    ghci>mathematica <$> lookupSeq (SubSeq [1,2,2,3,3,3,4,4,4,4])
-    Just ["a[1] = 1; a[n_] := a[n] = a[n - a[n - 1]] + 1 (* _Branko Curgus_, May 12 2009 *)","Table[n, {n, 13}, {n}] // Flatten (* _Robert G. Wilson v_, May 11 2010 *)"]
-    ```
+  ```haskell
+  ghci>mathematica <$> lookupSeq (SubSeq [1,2,2,3,3,3,4,4,4,4])
+  Just ["a[1] = 1; a[n_] := a[n] = a[n - a[n - 1]] + 1 (* _Branko Curgus_, May 12 2009 *)","Table[n, {n, 13}, {n}] // Flatten (* _Robert G. Wilson v_, May 11 2010 *)"]
+  ```
 
 - If no search result
 
-    ```haskell
-    ghci>lookupSeq (ID "1145141919893")
-    Nothing
-    ```
+  ```haskell
+  ghci>lookupSeq (ID "1145141919893")
+  Nothing
+  ```
