@@ -1,7 +1,11 @@
 # c.f.)
+## GitHub Actions
 # - https://github.com/haskell/actions/tree/main/setup
 # - https://debug-ito.hatenablog.com/entry/2021/02/28/121631
 # - https://stackoverflow.com/questions/68399221/github-actions-for-testing-haskell-package
+
+## Versions
+# - https://www.haskell.org/ghc/
 # - https://www.stackage.org
 
 on:
@@ -56,6 +60,8 @@ jobs:
             resolver: 'lts-18.24'
           - ghc: 'latest'
             resolver: 'lts'
+          - ghc: 'nightly'
+            resolver: 'nightly'
 
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.plan.allow-fail == true }}
