@@ -13,13 +13,13 @@ on:
     branches:
       - master
       - develop
-    paths:
+    paths-ignore:
       - "!**.md"
   pull_request:
     branches:
       - master
       - develop
-    paths:
+    paths-ignore:
       - "!**.md"
 
 name: build
