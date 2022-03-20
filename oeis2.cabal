@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: cbf0bcc989fbd04f42d9aa54239340e10b676b763e62854aaf7d124a6d7c9398
+-- hash: d12ab6c84c2584d3b6f205f5db01501658692c007dbabf678896c297b60ea3bc
 
 name:           oeis2
-version:        1.0.6
+version:        1.0.7
 synopsis:       Interface for Online Encyclopedia of Integer Sequences (OEIS).
 description:    Release notes are here https://github.com/23prime/oeis2/releases
 category:       Math
@@ -41,7 +41,7 @@ library
     , containers >=0.5 && <0.7
     , http-conduit >=2.2 && <2.4
     , lens >=4.15 && <6
-    , lens-aeson >=1.0 && <1.2
+    , lens-aeson >=1.0 && <2
     , text ==1.2.*
     , vector ==0.12.*
   default-language: Haskell2010
@@ -62,7 +62,7 @@ test-suite oeis2-test
     , hspec
     , http-conduit >=2.2 && <2.4
     , lens >=4.15 && <6
-    , lens-aeson >=1.0 && <1.2
+    , lens-aeson >=1.0 && <2
     , oeis2
     , text ==1.2.*
     , vector ==0.12.*

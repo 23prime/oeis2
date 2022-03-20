@@ -49,13 +49,15 @@ jobs:
           - ghc: 8.10.3
             resolver: lts-17.2
           - ghc: 8.10.7
-            resolver: lts-18.24
+            resolver: lts-18.28
+          - ghc: 9.0.2
+            resolver: lts-19.0
           - ghc: latest
             resolver: lts
           # Now, 'ghc: head' is unable
           # See: https://github.com/haskell/actions/issues/93
           # - ghc: head
-          - ghc: 9.0.2
+          - ghc: 9.2.2
             resolver: nightly
 
     runs-on: ubuntu-latest
