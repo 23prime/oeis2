@@ -6,6 +6,7 @@ module Math.OEIS.Internal where
 import           Control.Lens        ((^?), (^?!))
 import           Control.Monad       (when)
 import           Data.Aeson.Lens
+import           Data.Aeson.Key      (fromText)
 import           Data.Aeson.Types
 import           Data.Char
 import           Data.Functor
@@ -121,7 +122,7 @@ getData result k
 
 getIntData :: Value -> T.Text -> (T.Text, Maybe OEISData)
 getIntData result k
-  = let d = result ^? key k ._Integer
+  = let d = result ^? key (fromText k) ._Integer
     in case d of
       Nothing -> (k, Nothing)
       _       ->
@@ -133,7 +134,7 @@ getIntData result k
 
 getTextData :: Value -> T.Text -> (T.Text, Maybe OEISData)
 getTextData result k
-  = let d = result ^? key k ._String
+  = let d = result ^? key (fromText k) ._String
     in case d of
       Nothing -> (k, Nothing)
       _       ->
@@ -147,11 +148,11 @@ getTextData result k
 
 getTextsData :: Value -> T.Text -> (T.Text, Maybe OEISData)
 getTextsData result k
-  = let ds  = result ^? key k . _Array
+  = let ds  = result ^? key (fromText k) . _Array
     in case ds of
       Nothing -> (k, Nothing)
       _       ->
-        let ts  = (\i -> result ^?! key k . nth i . _String) <$> [0..(len - 1)]
+        let ts  = (\i -> result ^?! key (fromText k) . nth i . _String) <$> [0..(len - 1)]
             len = fromJust $ V.length <$> ds
         in case k of
           "program" -> let prgs = parsePrograms emptyProgram [] ts
