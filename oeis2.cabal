@@ -1,10 +1,8 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.35.1.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: d12ab6c84c2584d3b6f205f5db01501658692c007dbabf678896c297b60ea3bc
 
 name:           oeis2
 version:        1.0.7
