@@ -54,13 +54,17 @@ jobs:
             resolver: lts-19.0
           - ghc: 9.2.7
             resolver: lts-20.18
+          - ghc: 9.4.8
+            resolver: lts-21.25
+          - ghc: 9.6.5
+            resolver: lts-22.25
+          - ghc: 9.8.2
+            resolver: nightly
           - ghc: latest
             resolver: lts
           # Now, 'ghc: head' is unable
           # See: https://github.com/haskell/actions/issues/93
           # - ghc: head
-          - ghc: 9.4.5
-            resolver: nightly
 
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.plan.allow-fail == true }}
@@ -86,7 +90,7 @@ jobs:
 
       - name: Versions
         run: |
-          ghc --version    
+          ghc --version
           stack --version
 
       - name: Configure
