@@ -73,17 +73,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup
-        uses: haskell/actions/setup@v2
+        uses: haskell-actions/setup@v2
         with:
           ghc-version: ${{ matrix.plan.ghc }}
           enable-stack: true
           stack-version: 'latest'
 
       - name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.stack
           key: ${{ runner.os }}-stack-${{ hashFiles('stack.yaml') }}-${{ matrix.plan.resolver }}
