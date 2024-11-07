@@ -32,33 +32,17 @@ jobs:
       fail-fast: false
       matrix:
         plan:
-          - ghc: 8.0.2
-            resolver: lts-9.21
-          - ghc: 8.2.2
-            resolver: lts-11.22
-          - ghc: 8.4.4
-            resolver: lts-12.26
-          - ghc: 8.6.4
-            resolver: lts-13.19
-          - ghc: 8.6.5
-            resolver: lts-14.27
-          - ghc: 8.8.2
-            resolver: lts-15.3
-          - ghc: 8.8.4
-            resolver: lts-16.31
-          - ghc: 8.10.3
-            resolver: lts-17.2
-          - ghc: 8.10.7
-            resolver: lts-18.28
-          - ghc: 9.0.2
-            resolver: lts-19.0
+          - ghc: 9.4.8
+            resolver: lts-21.25
+          - ghc: 9.6.5
+            resolver: lts-22.25
+          - ghc: 9.8.2
+            resolver: nightly
           - ghc: latest
             resolver: lts
           # Now, 'ghc: head' is unable
           # See: https://github.com/haskell/actions/issues/93
           # - ghc: head
-          - ghc: 9.2.2
-            resolver: nightly
 
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.plan.allow-fail == true }}
@@ -67,24 +51,24 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup
-        uses: haskell/actions/setup@v1
+        uses: haskell-actions/setup@v2
         with:
           ghc-version: ${{ matrix.plan.ghc }}
           enable-stack: true
           stack-version: 'latest'
 
       - name: Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.stack
           key: ${{ runner.os }}-stack-${{ hashFiles('stack.yaml') }}-${{ matrix.plan.resolver }}
 
       - name: Versions
         run: |
-          ghc --version    
+          ghc --version
           stack --version
 
       - name: Configure
