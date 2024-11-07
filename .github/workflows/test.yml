@@ -36,7 +36,7 @@ jobs:
             resolver: lts-21.25
           - ghc: 9.6.6
             resolver: lts-22.40
-          - ghc: 9.8.3
+          - ghc: 9.8.2
             resolver: nightly
           - ghc: latest
             resolver: lts
