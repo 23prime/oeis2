@@ -38,14 +38,14 @@ specLookupSeq = describe "Test for lookupSeq" $ do
     maple <$> lookupSeq (ID "A000027") `shouldBe`
     Just ["A000027 := n->n; seq(A000027(n), n=1..100);"]
   it "No search results" $
-    lookupSeq (SubSeq [1,3,4,5,4,3,6]) `shouldBe` Nothing
+    lookupSeq (SubSeq [1,3,4,5,4,3,6,10000000]) `shouldBe` Nothing
 
 specGetSeqData :: Spec
 specGetSeqData = describe "Test for getSeqData" $ do
   it "Get SeqData" $
     getSeqData (ID "A000027")`shouldBe` Just [1..77]
   it "No SeqData" $
-    getSeqData (SubSeq [1,3,4,5,4,3,6]) `shouldBe` Nothing
+    getSeqData (SubSeq [1,3,4,5,4,3,6,10000000]) `shouldBe` Nothing
 
 specExtendSeq :: Spec
 specExtendSeq = describe "Test for extendSeq" $ do
@@ -55,5 +55,4 @@ specExtendSeq = describe "Test for extendSeq" $ do
         seq = extendSeq rs
     in rs `isInfixOf` seq
   it "No extension" $
-    extendSeq [1,3,4,5,4,3,6] `shouldBe` [1,3,4,5,4,3,6]
-
+    extendSeq [1,3,4,5,4,3,6,10000000] `shouldBe` [1,3,4,5,4,3,6,10000000]
