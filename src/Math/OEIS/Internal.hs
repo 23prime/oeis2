@@ -3,10 +3,11 @@
 
 module Math.OEIS.Internal where
 
-import           Control.Lens        ((^?), (^?!))
+import           Control.Lens        ((^?!), (^?))
 import           Control.Monad       (when)
-import           Data.Aeson.Lens
+import           Data.Aeson          (decodeStrict)
 import           Data.Aeson.Key      (fromText)
+import           Data.Aeson.Lens
 import           Data.Aeson.Types
 import           Data.Char
 import           Data.Functor
@@ -86,7 +87,7 @@ getResults :: SearchStatus -> Int -> Int -> V.Vector Value -> IO (V.Vector Value
 getResults ss start bound vs = do
   when (bound < 0) $ fail "Upper-bound number of search results mast be non-negative."
   jsn <- getJSON ss start
-  let results' = jsn ^? key "results" . _Array
+  let results' = decodeStrict $ T.encodeUtf8 jsn :: Maybe Array
       results = case results' of
         Nothing  -> return []
         Just vs' ->
