@@ -36,7 +36,7 @@ library
   build-depends:
       aeson ==2.*
     , base >=4.17 && <5
-    , containers >=0.5 && <0.8
+    , containers >=0.5 && <0.9
     , http-conduit >=2.2 && <3
     , lens >=4.15 && <6
     , lens-aeson >=1.2 && <2
@@ -56,7 +56,7 @@ test-suite oeis2-test
       QuickCheck
     , aeson ==2.*
     , base >=4.17 && <5
-    , containers >=0.5 && <0.8
+    , containers >=0.5 && <0.9
     , hspec
     , http-conduit >=2.2 && <3
     , lens >=4.15 && <6

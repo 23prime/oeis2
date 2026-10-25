@@ -19,7 +19,7 @@ dependencies:
 - text         >= 2     && < 3
 - vector       >= 0.13  && < 0.14
 - aeson        >= 2     && < 3
-- containers   >= 0.5   && < 0.8
+- containers   >= 0.5   && < 0.9
 - lens         >= 4.15  && < 6
 - lens-aeson   >= 1.2   && < 2
 - http-conduit >= 2.2   && < 3
