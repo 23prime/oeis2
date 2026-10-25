@@ -1,0 +1,83 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      STACK: stack --no-terminal --system-ghc
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check version
+        run: |
+          version=$(sed -n 's/^version: *//p' package.yaml)
+          if [ "v${version}" != "${GITHUB_REF_NAME}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match version v${version} in package.yaml" >&2
+            exit 1
+          fi
+
+      - name: Setup
+        uses: haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d # v2.12.1
+        with:
+          ghc-version: 9.6.6
+          enable-stack: true
+          stack-version: 'latest'
+
+      - name: Test
+        run: $STACK test
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: write # create the GitHub release
+
+    steps:
+      - name: Create GitHub Release
+        run: gh release create "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" --verify-tag --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  upload-hackage:
+    name: Upload to Hackage
+    runs-on: ubuntu-latest
+    needs: test
+    environment: hackage # requires manual approval; Hackage versions cannot be deleted
+    env:
+      STACK: stack --no-terminal --system-ghc
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup
+        uses: haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d # v2.12.1
+        with:
+          ghc-version: 9.6.6
+          enable-stack: true
+          stack-version: 'latest'
+
+      - name: Upload
+        run: $STACK upload --no-save-hackage-creds .
+        env:
+          HACKAGE_KEY: ${{ secrets.HACKAGE_KEY }}
