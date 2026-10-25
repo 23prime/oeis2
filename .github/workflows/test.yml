@@ -71,6 +71,9 @@ jobs:
           ghc --version
           stack --version
 
+      - name: Debug OEIS
+        run: curl -sS -i 'https://oeis.org/search?fmt=json&q=id:A000027' | head -c 1500
+
       - name: Configure
         run: |
           set -ex
