@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           oeis2
-version:        1.0.9
+version:        1.0.10
 synopsis:       Interface for Online Encyclopedia of Integer Sequences (OEIS).
 description:    Release notes are here https://github.com/23prime/oeis2/releases
 category:       Math
