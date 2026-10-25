@@ -17,9 +17,9 @@ import qualified Data.Text           as T
 import qualified Data.Text.Encoding  as T
 import qualified Data.Text.IO        as T
 import qualified Data.Vector         as V
-import           Network.HTTP.Simple (getResponseBody, httpBS, parseRequest)
 import           System.IO.Unsafe    (unsafePerformIO)
 
+import           Math.OEIS.Http
 import           Math.OEIS.Types
 
 
@@ -71,22 +71,19 @@ addPrefix ss            = let (cst, txt) = T.breakOn " " $ T.pack $ show ss
 searchURI :: SearchStatus -> T.Text
 searchURI ss = baseSearchURI +.+ addPrefix ss
 
-openURL :: T.Text -> IO T.Text
-openURL x = T.decodeUtf8 . getResponseBody <$> (httpBS =<< parseRequest (T.unpack x))
-
-getJSON :: SearchStatus -> Int -> IO T.Text
-getJSON (Others txt) _ = return txt -- for test
-getJSON ss n           = openURL $ searchURI ss +.+ "&start=" +.+ T.pack (show n)
+getJSON :: Fetcher -> SearchStatus -> Int -> IO T.Text
+getJSON _ (Others txt) _ = return txt -- for test
+getJSON fetch ss n       = fetch $ searchURI ss +.+ "&start=" +.+ T.pack (show n)
 
 
 ----------------
 -- Parse JSON --
 ----------------
 -- Get all search results --
-getResults :: SearchStatus -> Int -> Int -> V.Vector Value -> IO (V.Vector Value)
-getResults ss start bound vs = do
+getResults :: Fetcher -> SearchStatus -> Int -> Int -> V.Vector Value -> IO (V.Vector Value)
+getResults fetch ss start bound vs = do
   when (bound < 0) $ fail "Upper-bound number of search results mast be non-negative."
-  jsn <- getJSON ss start
+  jsn <- getJSON fetch ss start
   let results' = decodeStrict $ T.encodeUtf8 jsn :: Maybe Array
       results = case results' of
         Nothing  -> return []
@@ -103,13 +100,13 @@ getResults ss start bound vs = do
                 if bound /= 0 && diff <= 10 || len /= 10 then
                   return $ vs V.++ V.take diff vs'
                 else
-                  getResults ss start' bound $ vs V.++ vs'
+                  getResults fetch ss start' bound $ vs V.++ vs'
   results
 
 -- Get nth search result --
-getResult :: SearchStatus -> Int -> IO (Maybe Value)
-getResult ss n = do
-  results <- getResults ss 0 (n + 1) []
+getResult :: Fetcher -> SearchStatus -> Int -> IO (Maybe Value)
+getResult fetch ss n = do
+  results <- getResults fetch ss 0 (n + 1) []
   let result = results V.!? n
   return result
 
@@ -161,9 +158,9 @@ getTextsData result k
           _         -> (k, Just $ TXTS ts)
 
 
-resultLen :: SearchStatus -> IO (Maybe Int)
-resultLen ss = do
-  jsn <- getJSON ss 0
+resultLen :: Fetcher -> SearchStatus -> IO (Maybe Int)
+resultLen fetch ss = do
+  jsn <- getJSON fetch ss 0
   return $ fromInteger <$> jsn ^? key "count" . _Integer
 
 emptyOEIS :: OEISSeq
@@ -236,3 +233,36 @@ parsePrograms (lang0, funcs) prgs (t : ts)
     (lang', func') = T.breakOn ")" t
     lang           = T.tail lang'
     func           = T.strip $ T.tail func'
+
+
+--------------------------------
+-- Functions with HTTP fetcher --
+--------------------------------
+searchSeqWith :: Fetcher -> SearchStatus -> Int -> IO (V.Vector OEISSeq)
+searchSeqWith fetch ss bound = do
+  results' <- getResults fetch ss 0 bound []
+  let seqs
+        | V.null results' = []
+        | otherwise       = parseOEIS <$> results'
+  return seqs
+
+lookupSeqWith :: Fetcher -> SearchStatus -> IO (Maybe OEISSeq)
+lookupSeqWith fetch ss = do
+  result <- getResult fetch ss 0
+  return $ case result of
+             Just result' -> Just $ parseOEIS result'
+             _            -> Nothing
+
+getSeqDataWith :: Fetcher -> SearchStatus -> IO (Maybe SeqData)
+getSeqDataWith fetch = ((seqData <$>) <$>) . lookupSeqWith fetch
+
+extendSeqWith :: Fetcher -> [Integer] -> IO [Integer]
+extendSeqWith _ [] = return []
+extendSeqWith fetch sd = do
+  oeis <- lookupSeqWith fetch (SubSeq sd)
+  return $ case oeis of
+    Just s -> extend sd (seqData s)
+    _      -> sd
+  where
+    extend :: SeqData -> SeqData -> SeqData
+    extend sd ext = fromMaybe sd . find (sd `isPrefixOf`) $ tails ext

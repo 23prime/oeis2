@@ -8,6 +8,7 @@ copyright:           "2019 Taisuke Hikawa"
 
 extra-source-files:
 - README.md
+- test/fixtures/*.json
 
 synopsis:            Interface for Online Encyclopedia of Integer Sequences (OEIS).
 category:            Math
@@ -38,4 +39,3 @@ tests:
     dependencies:
     - oeis2
     - hspec
-    - QuickCheck
