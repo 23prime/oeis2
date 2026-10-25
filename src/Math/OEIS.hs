@@ -20,6 +20,7 @@ import           Data.Maybe         (fromMaybe, listToMaybe)
 import qualified Data.Vector        as V
 import           System.IO.Unsafe   (unsafePerformIO)
 
+import           Math.OEIS.Http
 import           Math.OEIS.Internal
 import           Math.OEIS.Types
 
@@ -47,12 +48,7 @@ searchSeq ss = unsafePerformIO . searchSeq' ss
 
 -- | searchSeq in IO
 searchSeq' :: SearchStatus -> Int -> IO (V.Vector OEISSeq)
-searchSeq' ss bound = do
-  results' <- getResults ss 0 bound []
-  let seqs
-        | V.null results' = []
-        | otherwise       = parseOEIS <$> results'
-  return seqs
+searchSeq' = searchSeqWith httpFetch
 
 
 -- | Look up a sequence on OEIS.
@@ -69,11 +65,7 @@ lookupSeq = unsafePerformIO . lookupSeq'
 
 -- | lookupSeq in IO
 lookupSeq' :: SearchStatus -> IO (Maybe OEISSeq)
-lookupSeq' ss = do
-  result <- getResult ss 0
-  return $ case result of
-             Just result' -> Just $ parseOEIS result'
-             _            -> Nothing
+lookupSeq' = lookupSeqWith httpFetch
 
 
 -- | Get sub-sequence on OEIS.
@@ -91,7 +83,7 @@ getSeqData = unsafePerformIO . getSeqData'
 
 -- | getSeqData in IO
 getSeqData' :: SearchStatus -> IO (Maybe SeqData)
-getSeqData' = ((seqData <$>) <$>) . lookupSeq'
+getSeqData' = getSeqDataWith httpFetch
 
 
 -- | Extend from sub-sequence.
@@ -108,12 +100,4 @@ extendSeq = unsafePerformIO . extendSeq'
 
 -- | extendSeq in IO
 extendSeq' :: [Integer] -> IO [Integer]
-extendSeq' [] = return []
-extendSeq' sd = do
-  oeis <- lookupSeq' (SubSeq sd)
-  return $ case oeis of
-    Just s -> extend sd (seqData s)
-    _      -> sd
-  where
-    extend :: SeqData -> SeqData -> SeqData
-    extend sd ext = fromMaybe sd . find (sd `isPrefixOf`) $ tails ext
+extendSeq' = extendSeqWith httpFetch

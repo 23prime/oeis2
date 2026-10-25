@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.36.0.
+-- This file has been generated from package.yaml by hpack version 0.37.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -19,6 +19,7 @@ license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
+    test/fixtures/A000027.json
 
 source-repository head
   type: git
@@ -27,6 +28,7 @@ source-repository head
 library
   exposed-modules:
       Math.OEIS
+      Math.OEIS.Http
       Math.OEIS.Internal
       Math.OEIS.Types
   other-modules:
@@ -53,8 +55,7 @@ test-suite oeis2-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      QuickCheck
-    , aeson ==2.*
+      aeson ==2.*
     , base >=4.17 && <5
     , containers >=0.5 && <0.8
     , hspec
